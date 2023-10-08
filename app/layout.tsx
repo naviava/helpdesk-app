@@ -1,8 +1,9 @@
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import "./globals.css";
 import type { Metadata } from "next";
-import { Karla } from "next/font/google";
+import { Quicksand } from "next/font/google";
 
-const font = Karla({ subsets: ["latin"] });
+const font = Quicksand({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Helpdesk Management",
@@ -16,7 +17,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={font.className}>{children}</body>
+      <body className={font.className}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
