@@ -4,8 +4,11 @@ import { Quicksand } from "next/font/google";
 
 import { getServerSession } from "next-auth";
 
+import TRPCProvider from "@/app/_trpc/trpc-provider";
 import SessionProvider from "@/components/providers/session-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { ToastProvider } from "@/components/providers/toast-provider";
+
 import { cn } from "@/lib/utils";
 
 const font = Quicksand({ subsets: ["latin"] });
@@ -24,7 +27,12 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={cn("text-gray-950 dark:text-gray-50", font.className)}>
+      <body
+        className={cn(
+          "text-gray-950 dark:text-gray-50 dark:bg-slate-900",
+          font.className
+        )}
+      >
         <SessionProvider session={session}>
           <ThemeProvider
             attribute="class"
@@ -32,7 +40,10 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <TRPCProvider>
+              <ToastProvider />
+              {children}
+            </TRPCProvider>
           </ThemeProvider>
         </SessionProvider>
       </body>

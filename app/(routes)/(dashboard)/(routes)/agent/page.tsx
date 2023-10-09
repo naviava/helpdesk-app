@@ -14,7 +14,7 @@ export default async function AgentPage({}: AgentPageProps) {
   });
 
   if (!user) return redirect("/");
-  if (user.role === "USER") return redirect("/user");
+  if (user.role === "USER" || user.role === "MANAGER") return redirect("/user");
 
   return (
     <div>
