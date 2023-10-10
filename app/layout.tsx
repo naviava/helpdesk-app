@@ -29,7 +29,7 @@ export default async function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "text-gray-950 dark:text-gray-50 dark:bg-slate-900",
+          "text-gray-950 dark:text-gray-50 dark:bg-slate-900 bg-slate-100",
           font.className
         )}
       >

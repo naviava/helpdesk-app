@@ -1,7 +1,11 @@
 "use client";
 
-import { useSession, signOut, signIn } from "next-auth/react";
+import { useCallback, useMemo } from "react";
 
+import { signOut } from "next-auth/react";
+import { LogOut, Settings } from "lucide-react";
+
+import { ThemeToggleButton } from "@/components/theme-toggle-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -11,40 +15,64 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { ThemeToggleButton } from "../theme-toggle-button";
 
-export default function AuthButton() {
-  const { data: session } = useSession();
+import { trpc } from "@/app/_trpc/client";
+import { serverClient } from "@/app/_trpc/server-client";
 
-  if (!session)
-    return <button onClick={() => signIn("google")}>Sign in</button>;
+interface AuthButtonProps {
+  initialData: Awaited<ReturnType<(typeof serverClient)["getUserProfile"]>>;
+}
+
+export default function AuthButton({ initialData }: AuthButtonProps) {
+  const { data: user } = trpc.getUserProfile.useQuery(undefined, {
+    initialData: initialData,
+  });
+
+  const manageAccount = useCallback(() => {}, []);
+
+  const accountOptions = useMemo(
+    () => [
+      {
+        label: "Manage account",
+        Icon: Settings,
+        action: manageAccount,
+      },
+      {
+        label: "Sign out",
+        Icon: LogOut,
+        action: () => signOut(),
+      },
+    ],
+    [manageAccount]
+  );
 
   return (
-    <>
+    <div className="flex gap-2">
       <ThemeToggleButton />
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="cursor-pointer">
           <Avatar>
-            <AvatarImage
-              src={session?.user?.image || ""}
-              alt="User profile image"
-            />
-            <AvatarFallback>
-              {session?.user?.name?.[0].toUpperCase()}
+            <AvatarImage src={user?.image || ""} alt="User profile image" />
+            <AvatarFallback className="bg-slate-300 font-extrabold text-xl dark:bg-slate-700">
+              {user?.name?.[0].toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="dark:bg-slate-800">
-          <DropdownMenuLabel>{session?.user?.name}</DropdownMenuLabel>
-          <DropdownMenuSeparator className="bg-slate-700" />
-          <DropdownMenuItem
-            onClick={() => signOut()}
-            className="dark:hover:bg-slate-700"
-          >
-            Sign out
-          </DropdownMenuItem>
+          <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
+          <DropdownMenuSeparator className="dark:bg-slate-700" />
+          {accountOptions.map((option) => (
+            <DropdownMenuItem
+              key={option.label}
+              onClick={option.action}
+              className="dark:hover:bg-slate-700 flex gap-2"
+            >
+              {option.label}
+              <option.Icon className="ml-auto h-4 w-4 text-gray-400 dark:text-gray-500" />
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuContent>
       </DropdownMenu>
-    </>
+    </div>
   );
 }

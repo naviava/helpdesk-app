@@ -3,12 +3,26 @@ import { hash } from "bcrypt";
 import { TRPCError } from "@trpc/server";
 
 import { db } from "@/lib/db";
-import { publicProcedure, privateProcedure, router } from "@/server/trpc";
-import { NextResponse } from "next/server";
+import {
+  publicProcedure,
+  privateProcedure,
+  adminProcedure,
+  managerProcedure,
+  router,
+} from "@/server/trpc";
 
 export const appRouter = router({
-  getData: publicProcedure.query(async () => {
-    // Database stuff.
+  getUserProfile: privateProcedure.query(async ({ ctx }) => {
+    const user = await db.user.findUnique({
+      where: { email: ctx.user.email },
+      select: {
+        name: true,
+        email: true,
+        image: true,
+        role: true,
+      },
+    });
+    return user;
   }),
 
   // User registration
