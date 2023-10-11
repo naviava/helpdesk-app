@@ -4,6 +4,7 @@ import TRPCProvider from "@/app/_trpc/trpc-provider";
 import { ThemeProvider } from "./theme-provider";
 import SessionProvider from "./session-provider";
 import NextUIProvider from "./next-ui-provider";
+import { ToastProvider } from "./toast-provider";
 
 interface AllProvidersProps {
   children: React.ReactNode;
@@ -21,7 +22,10 @@ export default async function AllProviders({ children }: AllProvidersProps) {
           enableSystem
           disableTransitionOnChange
         >
-          <TRPCProvider>{children}</TRPCProvider>
+          <TRPCProvider>
+            {children}
+            <ToastProvider />
+          </TRPCProvider>
         </ThemeProvider>
       </NextUIProvider>
     </SessionProvider>

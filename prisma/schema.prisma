@@ -67,6 +67,9 @@ model User {
   createdRequests  Request[] @relation("UserRequest")
   assignedRequests Request[] @relation("AgentRequest")
   messages         Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Priority {
@@ -86,6 +89,7 @@ enum TicketStatus {
 
 model Ticket {
   id             String          @id @default(cuid())
+  refId          String          @unique
   title          String          @db.Text
   priority       Priority        @default(LOW)
   status         TicketStatus    @default(NEW)
@@ -100,6 +104,9 @@ model Ticket {
   messages       Message[]
   technicalNotes TechnicalNote[]
   logs           Log[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([userEmail, agentEmail, categoryId, departmentId])
 }
@@ -122,6 +129,7 @@ enum MgrConfirm {
 
 model Request {
   id             String           @id @default(cuid())
+  refId          String
   title          String           @db.Text
   priority       Priority         @default(LOW)
   status         RequestStatus    @default(NEW)
@@ -138,6 +146,9 @@ model Request {
   technicalNotes TechnicalNote[]
   logs           Log[]
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([userEmail, agentEmail, categoryId, departmentId])
 }
 
@@ -152,6 +163,9 @@ model Message {
   request    Request?     @relation(fields: [requestId], references: [id], onDelete: Cascade)
   Attachment Attachment[]
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([userEmail, ticketId, requestId])
 }
 
@@ -161,6 +175,9 @@ model Attachment {
   url       String  @db.Text
   messageId String
   message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([messageId])
 }
@@ -173,6 +190,9 @@ model TechnicalNote {
   requestId String?
   request   Request? @relation(fields: [requestId], references: [id], onDelete: Cascade)
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([ticketId, requestId])
 }
 
@@ -184,6 +204,9 @@ model Log {
   requestId String?
   request   Request? @relation(fields: [requestId], references: [id], onDelete: Cascade)
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([ticketId, requestId])
 }
 
@@ -191,12 +214,18 @@ model TicketCategory {
   id      String   @id @default(cuid())
   name    String   @unique
   tickets Ticket[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model RequestCategory {
   id       String    @id @default(cuid())
   name     String    @unique
   requests Request[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Department {
@@ -204,4 +233,7 @@ model Department {
   name     String    @unique
   tickets  Ticket[]
   requests Request[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

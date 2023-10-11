@@ -14,9 +14,5 @@ export default async function ManagerPage({}: ManagerPageProps) {
   if (!user) return redirect("/");
   if (user.role === "USER") return redirect("/user");
 
-  return (
-    <div className="p-6">
-      <AuthButton initialData={user} />
-    </div>
-  );
+  return <div>ManagerPage</div>;
 }

@@ -6,15 +6,11 @@ import { serverClient } from "@/app/_trpc/server-client";
 interface UserPageProps {}
 
 export default async function UserPage({}: UserPageProps) {
-  const session = await getServerSession();
-  if (!session) return redirect("/");
-
   const user = await serverClient.getUserProfile();
-  if (!user) return redirect("/");
 
   return (
     <div className="p-6">
-      <AuthButton initialData={user} />
+      <h1 className="text-3xl font-extrabold">Welcome back, {user?.name}</h1>
     </div>
   );
 }

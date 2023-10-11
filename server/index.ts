@@ -10,12 +10,16 @@ import {
   managerProcedure,
   router,
 } from "@/server/trpc";
+import { getServerSession } from "next-auth";
 
 export const appRouter = router({
   // Get user profile API.
-  getUserProfile: privateProcedure.query(async ({ ctx }) => {
+  getUserProfile: publicProcedure.query(async () => {
+    const session = await getServerSession();
+    if (!session || !session?.user || !session.user.email) return null;
+
     const user = await db.user.findUnique({
-      where: { email: ctx.user.email },
+      where: { email: session.user.email },
       select: {
         name: true,
         email: true,

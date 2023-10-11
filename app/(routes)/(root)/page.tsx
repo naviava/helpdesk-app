@@ -14,7 +14,7 @@ export default async function Home() {
     select: { role: true },
   });
 
-  if (!user) return null;
+  if (!user) return <SignInClient />;
 
   if (user.role === "ADMIN" || user.role === "AGENT") {
     return redirect("/agent");

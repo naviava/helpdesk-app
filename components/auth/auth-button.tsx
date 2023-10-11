@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
 
 import { signOut } from "next-auth/react";
-import { LogOut, Settings } from "lucide-react";
+import { LogOut, Settings, UserCircle2 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -23,18 +24,23 @@ interface AuthButtonProps {
 }
 
 export default function AuthButton({ initialData }: AuthButtonProps) {
+  const router = useRouter();
+
   const { data: user } = trpc.getUserProfile.useQuery(undefined, {
     initialData: initialData,
   });
 
-  const manageAccount = useCallback(() => {}, []);
-
   const accountOptions = useMemo(
     () => [
       {
+        label: "My Profile",
+        Icon: UserCircle2,
+        action: () => router.push("/user"),
+      },
+      {
         label: "Manage account",
         Icon: Settings,
-        action: manageAccount,
+        action: () => router.push("/user/manage-account"),
       },
       {
         label: "Sign out",
@@ -42,7 +48,7 @@ export default function AuthButton({ initialData }: AuthButtonProps) {
         action: () => signOut(),
       },
     ],
-    [manageAccount],
+    [router],
   );
 
   return (

@@ -33,7 +33,7 @@ export default function SignInOptions() {
             key={option.name}
             variant="outline"
             onClick={() => signIn(`${option.name}`)}
-            className="h-[3rem] w-[8rem] text-lg capitalize active:scale-95 md:w-[10rem]"
+            className="h-[3rem] w-[8rem] text-lg capitalize hover:bg-slate-200 active:scale-95 dark:hover:bg-accent md:w-[10rem] "
           >
             <option.Icon size={20} className="mr-2" />
             <span className="text-gray-500 dark:text-gray-400">
