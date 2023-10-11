@@ -5,9 +5,9 @@ import { ThemeToggleButton } from "@/components/theme-toggle-button";
 export default function SignInClient() {
   return (
     <>
-      <div className="flex flex-col justify-center items-center h-full gap-2 translate-y-[-3rem]">
+      <div className="flex h-full translate-y-[-3rem] flex-col items-center justify-center gap-2">
         <Logo />
-        <h1 className="text-3xl font-bold mt-4">Welcome to Helpdesk</h1>
+        <h1 className="mt-4 text-3xl font-bold">Welcome to Helpdesk</h1>
         <SignInScreen />
       </div>
       <div className="absolute bottom-5 right-5 md:bottom-10 md:right-10">

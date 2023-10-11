@@ -8,7 +8,7 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <div className="h-full">
-      <div className="fixed inset-y-0 z-50 h-[3rem] w-full md:pl-56">
+      <div className="fixed inset-y-0 z-50 h-[4rem] w-full md:pl-56">
         <Navbar />
       </div>
       <div className="fixed inset-y-0 z-50 hidden h-full w-56 flex-col md:flex">

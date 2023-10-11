@@ -12,6 +12,7 @@ import {
 } from "@/server/trpc";
 
 export const appRouter = router({
+  // Get user profile API.
   getUserProfile: privateProcedure.query(async ({ ctx }) => {
     const user = await db.user.findUnique({
       where: { email: ctx.user.email },
@@ -25,7 +26,7 @@ export const appRouter = router({
     return user;
   }),
 
-  // User registration
+  // User registration mutation API.
   registerUser: publicProcedure
     .input(
       z.object({
@@ -39,10 +40,10 @@ export const appRouter = router({
           .string()
           .min(6)
           .regex(
-            new RegExp(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&+=!]).*$/)
+            new RegExp(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&+=!]).*$/),
           ),
         confirmPassword: z.string().min(6),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       const { name, email, password, confirmPassword } = input;

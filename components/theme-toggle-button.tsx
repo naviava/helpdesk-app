@@ -29,13 +29,13 @@ export function ThemeToggleButton() {
         <DropdownMenuItem onClick={() => setTheme("light")}>
           Light
           {theme === "light" && (
-            <Check className="w-4 h-4 text-neutral-400 ml-auto" />
+            <Check className="ml-auto h-4 w-4 text-neutral-400" />
           )}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>
           Dark
           {theme === "dark" && (
-            <Check className="w-4 h-4 text-neutral-500 ml-auto" />
+            <Check className="ml-auto h-4 w-4 text-neutral-500" />
           )}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
@@ -43,9 +43,9 @@ export function ThemeToggleButton() {
           {theme === "system" && (
             <Check
               className={cn(
-                "w-4 h-4 ml-auto",
+                "ml-auto h-4 w-4",
                 systemTheme === "light" && "text-neutral-400",
-                systemTheme === "dark" && "text-neutral-500"
+                systemTheme === "dark" && "text-neutral-500",
               )}
             />
           )}

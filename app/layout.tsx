@@ -2,12 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Quicksand } from "next/font/google";
 
-import { getServerSession } from "next-auth";
-
-import TRPCProvider from "@/app/_trpc/trpc-provider";
-import SessionProvider from "@/components/providers/session-provider";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import { ToastProvider } from "@/components/providers/toast-provider";
+import AllProviders from "@/components/providers/all-providers";
 
 import { cn } from "@/lib/utils";
 
@@ -23,29 +18,15 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession();
-
   return (
     <html lang="en">
       <body
         className={cn(
-          "text-gray-950 dark:text-gray-50 dark:bg-slate-900 bg-slate-100",
-          font.className
+          "bg-slate-100 text-gray-950 dark:bg-slate-900 dark:text-gray-50",
+          font.className,
         )}
       >
-        <SessionProvider session={session}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <TRPCProvider>
-              <ToastProvider />
-              {children}
-            </TRPCProvider>
-          </ThemeProvider>
-        </SessionProvider>
+        <AllProviders>{children}</AllProviders>
       </body>
     </html>
   );

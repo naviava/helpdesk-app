@@ -55,14 +55,14 @@ export default function LoginForm() {
         }
       });
     },
-    [router]
+    [router],
   );
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 w-full px-6 mt-4 max-w-xl"
+        className="mt-4 w-full max-w-xl space-y-8 px-6"
       >
         <FormField
           control={form.control}

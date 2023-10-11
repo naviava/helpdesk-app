@@ -23,8 +23,7 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -53,14 +52,156 @@ enum UserRole {
 }
 
 model User {
-  id             String    @id @default(cuid())
-  name           String
-  email          String    @unique
-  emailVerified  DateTime?
-  image          String?
-  hashedPassword String?
-  role           UserRole  @default(USER)
+  id               String    @id @default(cuid())
+  name             String
+  email            String    @unique
+  emailVerified    DateTime?
+  image            String?
+  hashedPassword   String?
+  role             UserRole  @default(USER)
+  disabled         Boolean   @default(false)
+  accounts         Account[]
+  sessions         Session[]
+  createdTickets   Ticket[]  @relation("UserTicket")
+  assignedTickets  Ticket[]  @relation("AgentTicket")
+  createdRequests  Request[] @relation("UserRequest")
+  assignedRequests Request[] @relation("AgentRequest")
+  messages         Message[]
+}
 
-  accounts Account[]
-  sessions Session[]
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum TicketStatus {
+  NEW
+  WAITING_REPLY
+  NEW_REPLY
+  ON_HOLD
+  RESOLVED
+}
+
+model Ticket {
+  id             String          @id @default(cuid())
+  title          String          @db.Text
+  priority       Priority        @default(LOW)
+  status         TicketStatus    @default(NEW)
+  userEmail      String
+  user           User            @relation("UserTicket", fields: [userEmail], references: [email], onDelete: Restrict)
+  agentEmail     String?
+  agent          User?           @relation("AgentTicket", fields: [agentEmail], references: [id], onDelete: Restrict)
+  categoryId     String?
+  category       TicketCategory? @relation(fields: [categoryId], references: [id])
+  departmentId   String?
+  department     Department?     @relation(fields: [departmentId], references: [id])
+  messages       Message[]
+  technicalNotes TechnicalNote[]
+  logs           Log[]
+
+  @@index([userEmail, agentEmail, categoryId, departmentId])
+}
+
+enum RequestStatus {
+  NEW
+  WAITING_REPLY
+  NEW_REPLY
+  ON_HOLD
+  ASSET_ISSUED
+  ASSET_OUT_OF_STOCK
+  RESOLVED
+}
+
+enum MgrConfirm {
+  PENDING
+  CONFIRMED
+  DENIED
+}
+
+model Request {
+  id             String           @id @default(cuid())
+  title          String           @db.Text
+  priority       Priority         @default(LOW)
+  status         RequestStatus    @default(NEW)
+  mgrConfirm     MgrConfirm       @default(PENDING)
+  userEmail      String
+  user           User             @relation("UserRequest", fields: [userEmail], references: [email], onDelete: Restrict)
+  agentEmail     String?
+  agent          User?            @relation("AgentRequest", fields: [agentEmail], references: [id], onDelete: Restrict)
+  categoryId     String?
+  category       RequestCategory? @relation(fields: [categoryId], references: [id])
+  departmentId   String?
+  department     Department?      @relation(fields: [departmentId], references: [id])
+  messages       Message[]
+  technicalNotes TechnicalNote[]
+  logs           Log[]
+
+  @@index([userEmail, agentEmail, categoryId, departmentId])
+}
+
+model Message {
+  id         String       @id @default(cuid())
+  content    String       @db.Text
+  userEmail  String
+  user       User         @relation(fields: [userEmail], references: [email])
+  ticketId   String?
+  ticket     Ticket?      @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  requestId  String?
+  request    Request?     @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  Attachment Attachment[]
+
+  @@index([userEmail, ticketId, requestId])
+}
+
+model Attachment {
+  id        String  @id @default(cuid())
+  name      String
+  url       String  @db.Text
+  messageId String
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+}
+
+model TechnicalNote {
+  id        String   @id @default(cuid())
+  message   String   @db.Text
+  ticketId  String?
+  ticket    Ticket?  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  requestId String?
+  request   Request? @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId, requestId])
+}
+
+model Log {
+  id        String   @id @default(cuid())
+  text      String   @db.Text
+  ticketId  String?
+  ticket    Ticket?  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  requestId String?
+  request   Request? @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId, requestId])
+}
+
+model TicketCategory {
+  id      String   @id @default(cuid())
+  name    String   @unique
+  tickets Ticket[]
+}
+
+model RequestCategory {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  requests Request[]
+}
+
+model Department {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  tickets  Ticket[]
+  requests Request[]
 }

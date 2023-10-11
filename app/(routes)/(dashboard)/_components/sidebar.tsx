@@ -1,4 +1,5 @@
 import Logo from "@/components/logo";
+import SidebarRoutes from "./sidebar-routes";
 
 interface SidebarProps {}
 
@@ -8,7 +9,9 @@ export default function Sidebar({}: SidebarProps) {
       <div className="p-6">
         <Logo />
       </div>
-      <div className="flex w-full flex-col">{/* <SidebarRoutes /> */}</div>
+      <div className="flex w-full flex-col">
+        <SidebarRoutes />
+      </div>
     </div>
   );
 }

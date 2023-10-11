@@ -82,14 +82,14 @@ export default function RegisterForm() {
 
   const onSubmit = useCallback(
     async (values: z.infer<typeof formSchema>) => registerUser(values),
-    [registerUser]
+    [registerUser],
   );
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4 w-full px-6 mt-4 max-w-xl"
+        className="mt-4 w-full max-w-xl space-y-4 px-6"
       >
         {/* Name. */}
         <FormField
@@ -98,7 +98,7 @@ export default function RegisterForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Name <span className="text-rose-600 text-lg">*</span>
+                Name <span className="text-lg text-rose-600">*</span>
               </FormLabel>
               <FormControl>
                 <Input {...field} />
@@ -116,7 +116,7 @@ export default function RegisterForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Email Address <span className="text-rose-600 text-lg">*</span>
+                Email Address <span className="text-lg text-rose-600">*</span>
               </FormLabel>
               <FormControl>
                 <Input {...field} />
@@ -131,7 +131,7 @@ export default function RegisterForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Password <span className="text-rose-600 text-lg">*</span>
+                Password <span className="text-lg text-rose-600">*</span>
               </FormLabel>
               <FormControl>
                 <Input type="password" {...field} />
@@ -147,7 +147,7 @@ export default function RegisterForm() {
             <FormItem>
               <FormLabel>
                 Confirm Password{" "}
-                <span className="text-rose-600 text-lg">*</span>
+                <span className="text-lg text-rose-600">*</span>
               </FormLabel>
               <FormControl>
                 <Input type="password" {...field} />
