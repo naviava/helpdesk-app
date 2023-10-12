@@ -77,6 +77,24 @@ export const appRouter = router({
 
       return true;
     }),
+
+  // Get All ticket categories API.
+  getTicketCategories: privateProcedure.query(async () => {
+    const categories = await db.ticketCategory.findMany({});
+    return categories;
+  }),
+
+  // Get All request categories API.
+  getRequestCategories: privateProcedure.query(async () => {
+    const categories = await db.requestCategory.findMany({});
+    return categories;
+  }),
+
+  // Get all departments API.
+  getDepartments: privateProcedure.query(async () => {
+    const departments = await db.department.findMany({});
+    return departments;
+  }),
 });
 
 export type AppRouter = typeof appRouter;

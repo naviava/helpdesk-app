@@ -35,5 +35,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# notes
-notes.txt
+# custom ignores
+/scripts

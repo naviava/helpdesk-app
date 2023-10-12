@@ -52,24 +52,28 @@ enum UserRole {
 }
 
 model User {
-  id               String    @id @default(cuid())
+  id               String      @id @default(cuid())
   name             String
-  email            String    @unique
+  email            String      @unique
   emailVerified    DateTime?
   image            String?
   hashedPassword   String?
-  role             UserRole  @default(USER)
-  disabled         Boolean   @default(false)
+  role             UserRole    @default(USER)
+  disabled         Boolean     @default(false)
+  departmentId     String?
+  department       Department? @relation(fields: [departmentId], references: [id])
   accounts         Account[]
   sessions         Session[]
-  createdTickets   Ticket[]  @relation("UserTicket")
-  assignedTickets  Ticket[]  @relation("AgentTicket")
-  createdRequests  Request[] @relation("UserRequest")
-  assignedRequests Request[] @relation("AgentRequest")
+  createdTickets   Ticket[]    @relation("UserTicket")
+  assignedTickets  Ticket[]    @relation("AgentTicket")
+  createdRequests  Request[]   @relation("UserRequest")
+  assignedRequests Request[]   @relation("AgentRequest")
   messages         Message[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([departmentId])
 }
 
 enum Priority {
@@ -81,8 +85,8 @@ enum Priority {
 
 enum TicketStatus {
   NEW
-  WAITING_REPLY
   NEW_REPLY
+  WAITING_REPLY
   ON_HOLD
   RESOLVED
 }
@@ -113,10 +117,10 @@ model Ticket {
 
 enum RequestStatus {
   NEW
-  WAITING_REPLY
   NEW_REPLY
-  ON_HOLD
+  WAITING_REPLY
   ASSET_ISSUED
+  ON_HOLD
   ASSET_OUT_OF_STOCK
   RESOLVED
 }
@@ -214,26 +218,18 @@ model TicketCategory {
   id      String   @id @default(cuid())
   name    String   @unique
   tickets Ticket[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model RequestCategory {
   id       String    @id @default(cuid())
   name     String    @unique
   requests Request[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model Department {
   id       String    @id @default(cuid())
   name     String    @unique
+  users    User[]
   tickets  Ticket[]
   requests Request[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }

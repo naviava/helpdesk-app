@@ -1,6 +1,4 @@
-import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
-import AuthButton from "@/components/auth/auth-button";
+import PageHeading from "@/components/page-heading";
 import { serverClient } from "@/app/_trpc/server-client";
 
 interface UserPageProps {}
@@ -10,7 +8,10 @@ export default async function UserPage({}: UserPageProps) {
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl font-extrabold">Welcome back, {user?.name}</h1>
+      <PageHeading
+        title={`Welcome, ${user?.name}`}
+        tagline="All data here is related to your account."
+      />
     </div>
   );
 }

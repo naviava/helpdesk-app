@@ -52,31 +52,29 @@ export default function AuthButton({ initialData }: AuthButtonProps) {
   );
 
   return (
-    <div className="flex gap-2">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild className="cursor-pointer">
-          <Avatar>
-            <AvatarImage src={user?.image || ""} alt="User profile image" />
-            <AvatarFallback className="bg-slate-300 text-xl font-extrabold dark:bg-slate-700">
-              {user?.name?.[0].toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="dark:bg-slate-800">
-          <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
-          <DropdownMenuSeparator className="dark:bg-slate-700" />
-          {accountOptions.map((option) => (
-            <DropdownMenuItem
-              key={option.label}
-              onClick={option.action}
-              className="flex gap-2 dark:hover:bg-slate-700"
-            >
-              {option.label}
-              <option.Icon className="ml-auto h-4 w-4 text-gray-400 dark:text-gray-500" />
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild className="cursor-pointer">
+        <Avatar>
+          <AvatarImage src={user?.image || ""} alt="User profile image" />
+          <AvatarFallback className="bg-slate-300 text-xl font-extrabold dark:bg-slate-700">
+            {user?.name?.[0].toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="dark:bg-slate-800">
+        <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
+        <DropdownMenuSeparator className="dark:bg-slate-700" />
+        {accountOptions.map((option) => (
+          <DropdownMenuItem
+            key={option.label}
+            onClick={option.action}
+            className="flex gap-2 dark:hover:bg-slate-700"
+          >
+            {option.label}
+            <option.Icon className="ml-auto h-4 w-4 text-gray-400" />
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

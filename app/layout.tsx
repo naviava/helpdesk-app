@@ -1,12 +1,12 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Quicksand } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 
 import AllProviders from "@/components/providers/all-providers";
 
 import { cn } from "@/lib/utils";
 
-const font = Quicksand({ subsets: ["latin"] });
+const font = Open_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Helpdesk Management",

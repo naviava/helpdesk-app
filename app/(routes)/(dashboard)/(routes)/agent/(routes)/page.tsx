@@ -1,10 +1,11 @@
-import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
-import AuthButton from "@/components/auth/auth-button";
-import { serverClient } from "@/app/_trpc/server-client";
+import PageHeading from "@/components/page-heading";
 
 interface AgentPageProps {}
 
 export default async function AgentPage({}: AgentPageProps) {
-  return <div>AgentPage</div>;
+  return (
+    <div className="p-6">
+      <PageHeading title="Agent dashboard" />
+    </div>
+  );
 }
