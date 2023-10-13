@@ -1,3 +1,5 @@
+import { TicketFormType } from "@/types";
+
 import {
   FormControl,
   FormDescription,
@@ -7,24 +9,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { UseFormReturn } from "react-hook-form";
 
 interface MessageTextareaProps {
-  form: UseFormReturn<
-    {
-      title: string;
-      message: string;
-      priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
-      category?: string | null | undefined;
-      department?: string | null | undefined;
-      attachment?: string | null | undefined;
-    },
-    any,
-    undefined
-  >;
+  form: TicketFormType;
+  disabled: boolean;
 }
 
-export default function MessageTextarea({ form }: MessageTextareaProps) {
+export default function MessageTextarea({
+  form,
+  disabled,
+}: MessageTextareaProps) {
   return (
     <div className="px-2">
       <FormField
@@ -34,11 +28,13 @@ export default function MessageTextarea({ form }: MessageTextareaProps) {
           <FormItem>
             <FormLabel className="ml-1">Message *</FormLabel>
             <FormControl>
-              <Textarea className="h-[20rem]" {...field} />
+              <Textarea disabled={disabled} className="h-[20rem]" {...field} />
             </FormControl>
-            <FormDescription className="italic">
-              Provide some more details about your issue.
-            </FormDescription>
+            {!field.value && (
+              <FormDescription className="italic">
+                Provide some more details about your issue.
+              </FormDescription>
+            )}
             <FormMessage />
           </FormItem>
         )}

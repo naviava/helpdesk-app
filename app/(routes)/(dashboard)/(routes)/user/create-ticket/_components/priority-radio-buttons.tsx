@@ -1,8 +1,8 @@
 import { Fragment, useMemo } from "react";
 
-import { UseFormReturn } from "react-hook-form";
 import { RadioGroup, Radio } from "@nextui-org/react";
 
+import { TicketFormType } from "@/types";
 import { Priority } from "@prisma/client";
 
 import {
@@ -15,22 +15,13 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 interface PriorityRadioButtonsProps {
-  form: UseFormReturn<
-    {
-      title: string;
-      message: string;
-      priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
-      category?: string | null | undefined;
-      department?: string | null | undefined;
-      attachment?: string | null | undefined;
-    },
-    any,
-    undefined
-  >;
+  form: TicketFormType;
+  disabled: boolean;
 }
 
 export default function PriorityRadioButtons({
   form,
+  disabled,
 }: PriorityRadioButtonsProps) {
   const priorityArray = useMemo(() => Object.values(Priority), []);
 
@@ -44,6 +35,7 @@ export default function PriorityRadioButtons({
           <FormItem>
             <FormControl>
               <RadioGroup
+                isDisabled={disabled}
                 onValueChange={field.onChange}
                 defaultValue={field.value}
                 orientation="horizontal"

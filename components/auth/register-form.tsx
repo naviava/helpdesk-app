@@ -51,10 +51,18 @@ const formSchema = z.object({
 export default function RegisterForm() {
   const router = useRouter();
 
-  const { mutate: registerUser, isLoading } = trpc.registerUser.useMutation({
-    onError: ({ message }) => {
-      toast.error(message);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
     },
+  });
+
+  const { mutate: registerUser, isLoading } = trpc.registerUser.useMutation({
+    onError: ({ message }) => toast.error(message),
     onSuccess: () => {
       toast.success("User account created");
       signIn("credentials", {
@@ -67,16 +75,6 @@ export default function RegisterForm() {
           router.refresh();
         }
       });
-    },
-  });
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
     },
   });
 

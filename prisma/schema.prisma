@@ -157,15 +157,15 @@ model Request {
 }
 
 model Message {
-  id         String       @id @default(cuid())
-  content    String       @db.Text
-  userEmail  String
-  user       User         @relation(fields: [userEmail], references: [email])
-  ticketId   String?
-  ticket     Ticket?      @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-  requestId  String?
-  request    Request?     @relation(fields: [requestId], references: [id], onDelete: Cascade)
-  Attachment Attachment[]
+  id          String       @id @default(cuid())
+  content     String       @db.Text
+  userEmail   String
+  user        User         @relation(fields: [userEmail], references: [email])
+  ticketId    String?
+  ticket      Ticket?      @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  requestId   String?
+  request     Request?     @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  attachments Attachment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

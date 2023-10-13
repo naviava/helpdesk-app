@@ -17,9 +17,10 @@ const isAuthenticated = middleware(async (opts) => {
 
   const user = await db.user.findUnique({
     where: { email: session.user.email },
+    include: { department: true },
   });
 
-  if (!user)
+  if (!user || user.disabled)
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: "Unauthorized action",
@@ -27,7 +28,14 @@ const isAuthenticated = middleware(async (opts) => {
 
   return opts.next({
     ctx: {
-      user: { name: user.name, email: user.email, image: user.image },
+      user: {
+        name: user.name,
+        email: user.email,
+        image: user.image,
+        role: user.role,
+        disabled: user.disabled,
+        departmentId: user.department?.id,
+      },
     },
   });
 });
@@ -43,14 +51,22 @@ const isAdmin = middleware(async (opts) => {
 
   const user = await db.user.findUnique({
     where: { email: session.user.email, role: "ADMIN" },
+    include: { department: true },
   });
 
-  if (!user)
+  if (!user || user.disabled)
     throw new TRPCError({ code: "FORBIDDEN", message: "Forbidden action" });
 
   return opts.next({
     ctx: {
-      user: { name: user.name, email: user.email, image: user.image },
+      user: {
+        name: user.name,
+        email: user.email,
+        image: user.image,
+        role: user.role,
+        disabled: user.disabled,
+        departmentId: user.department?.id,
+      },
     },
   });
 });
@@ -72,14 +88,22 @@ const isManager = middleware(async (opts) => {
         in: ["ADMIN", "MANAGER"],
       },
     },
+    include: { department: true },
   });
 
-  if (!user)
+  if (!user || user.disabled)
     throw new TRPCError({ code: "FORBIDDEN", message: "Forbidden action" });
 
   return opts.next({
     ctx: {
-      user: { name: user.name, email: user.email, image: user.image },
+      user: {
+        name: user.name,
+        email: user.email,
+        image: user.image,
+        role: user.role,
+        disabled: user.disabled,
+        departmentId: user.department?.id,
+      },
     },
   });
 });

@@ -1,18 +1,7 @@
-import { UseFormReturn } from "react-hook-form";
+import { TicketFormType } from "@/types";
 
 interface AttachmentInputProps {
-  form: UseFormReturn<
-    {
-      title: string;
-      message: string;
-      priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
-      category?: string | null | undefined;
-      department?: string | null | undefined;
-      attachment?: string | null | undefined;
-    },
-    any,
-    undefined
-  >;
+  form: TicketFormType;
 }
 
 export default function AttachmentInput({ form }: AttachmentInputProps) {
