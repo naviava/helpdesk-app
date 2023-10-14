@@ -72,7 +72,7 @@ export default function CreateTicketForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mx-auto mt-6 max-w-4xl space-y-8"
+        className="mx-auto mt-8 max-w-4xl space-y-8 lg:mt-10"
       >
         <TitleInput form={form} disabled={isLoading} />
         <div className="space-y-8 px-2 md:flex md:items-center md:gap-20 md:space-y-0">

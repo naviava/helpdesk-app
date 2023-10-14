@@ -31,7 +31,7 @@ export const authOptions: AuthOptions = {
           throw new Error("Invalid credentials");
 
         const user = await db.user.findUnique({
-          where: { email: credentials.email },
+          where: { email: credentials.email, disabled: false },
         });
 
         if (!user || !user?.hashedPassword)
@@ -39,7 +39,7 @@ export const authOptions: AuthOptions = {
 
         const isCorrectPassword = await compare(
           credentials.password,
-          user.hashedPassword
+          user.hashedPassword,
         );
 
         if (!isCorrectPassword) throw new Error("Invalid credentials");

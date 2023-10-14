@@ -2,6 +2,7 @@ import { router } from "@/server/trpc";
 import { registerUser } from "./api-routes/mutate/register-user";
 import { createTicket } from "./api-routes/mutate/create-ticket";
 import { getUserProfile } from "./api-routes/query/get-user-profile";
+import { getAllTickets, getUserTickets } from "./api-routes/query/get-tickets";
 import {
   getDepartments,
   getRequestCategories,
@@ -29,6 +30,12 @@ export const appRouter = router({
    *  priority*(default: LOW), message*, attachment.
    */
   createTicket,
+
+  // PRIVATE: Get all tickets API.
+  getAllTickets,
+
+  // PRIVATE: Get tickets created by logged in user.
+  getUserTickets,
 });
 
 export type AppRouter = typeof appRouter;

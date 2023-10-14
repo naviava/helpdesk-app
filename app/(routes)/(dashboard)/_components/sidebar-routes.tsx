@@ -42,7 +42,7 @@ export default function SidebarRoutes({}: SidebarRoutesProps) {
 
   return (
     <ScrollArea className="mt-24 w-full">
-      <div className="space-y-24">
+      <div className="space-y-20">
         {/* User Routes */}
         <section>
           <SidebarPanelHeader text="Manage Tickets" />
