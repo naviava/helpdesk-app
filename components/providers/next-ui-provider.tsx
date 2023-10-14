@@ -7,5 +7,5 @@ interface NextUIProviderProps {
 }
 
 export default function NextUIProvider({ children }: NextUIProviderProps) {
-  return <ThemeProvider>{children}</ThemeProvider>;
+  return <ThemeProvider style={{ height: "100%" }}>{children}</ThemeProvider>;
 }

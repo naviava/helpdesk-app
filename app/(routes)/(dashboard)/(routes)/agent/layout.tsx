@@ -10,5 +10,5 @@ export default async function AgentLayout({ children }: AgentLayoutProps) {
   if (!user || user.role === "MANAGER" || user.role === "USER")
     return redirect("/user");
 
-  return <div>{children}</div>;
+  return <>{children}</>;
 }

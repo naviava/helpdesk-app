@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 
 import { signOut } from "next-auth/react";
@@ -16,19 +16,14 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
-import { trpc } from "@/app/_trpc/client";
 import { serverClient } from "@/app/_trpc/server-client";
 
 interface AuthButtonProps {
-  initialData?: Awaited<ReturnType<(typeof serverClient)["getUserProfile"]>>;
+  user: Awaited<ReturnType<(typeof serverClient)["getUserProfile"]>>;
 }
 
-export default function AuthButton({ initialData }: AuthButtonProps) {
+export default function AuthButton({ user }: AuthButtonProps) {
   const router = useRouter();
-
-  const { data: user } = trpc.getUserProfile.useQuery(undefined, {
-    initialData: initialData,
-  });
 
   const accountOptions = useMemo(
     () => [

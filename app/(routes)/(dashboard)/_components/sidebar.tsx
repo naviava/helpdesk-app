@@ -9,7 +9,7 @@ export default function Sidebar({}: SidebarProps) {
       <div className="p-6">
         <Logo />
       </div>
-      <div className="flex w-full flex-col">
+      <div className="flex w-full flex-1 flex-col">
         <SidebarRoutes />
       </div>
     </div>
