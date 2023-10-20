@@ -6,7 +6,7 @@ interface AgentLayoutProps {
 }
 
 export default async function AgentLayout({ children }: AgentLayoutProps) {
-  const user = await serverClient.getUserProfile();
+  const user = await serverClient.user.getUserProfile();
   if (!user || user.role === "MANAGER" || user.role === "USER")
     return redirect("/user");
 

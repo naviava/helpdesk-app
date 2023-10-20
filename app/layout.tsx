@@ -10,7 +10,7 @@ const font = Open_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Helpdesk Management",
-  description: "Service Desk application for IT Support.",
+  description: "ITSM at your fingertips.",
 };
 
 export default async function RootLayout({

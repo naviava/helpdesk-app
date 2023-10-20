@@ -61,22 +61,23 @@ export default function RegisterForm() {
     },
   });
 
-  const { mutate: registerUser, isLoading } = trpc.registerUser.useMutation({
-    onError: ({ message }) => toast.error(message),
-    onSuccess: () => {
-      toast.success("User account created");
-      signIn("credentials", {
-        email: form.getValues("email"),
-        password: form.getValues("password"),
-        redirect: false,
-      }).then((callback) => {
-        if (callback?.ok) {
-          toast.success(`Logged in as ${form.getValues("name")}`);
-          router.refresh();
-        }
-      });
-    },
-  });
+  const { mutate: registerUser, isLoading } =
+    trpc.user.registerUser.useMutation({
+      onError: ({ message }) => toast.error(message),
+      onSuccess: () => {
+        toast.success("User account created");
+        signIn("credentials", {
+          email: form.getValues("email"),
+          password: form.getValues("password"),
+          redirect: false,
+        }).then((callback) => {
+          if (callback?.ok) {
+            toast.success(`Logged in as ${form.getValues("name")}`);
+            router.refresh();
+          }
+        });
+      },
+    });
 
   const onSubmit = useCallback(
     async (values: z.infer<typeof formSchema>) => registerUser(values),

@@ -6,7 +6,7 @@ interface ManagerLayoutProps {
 }
 
 export default async function ManagerLayout({ children }: ManagerLayoutProps) {
-  const user = await serverClient.getUserProfile();
+  const user = await serverClient.user.getUserProfile();
   if (!user || user.role === "USER") return redirect("/user");
 
   return <>{children}</>;

@@ -33,7 +33,7 @@ export default function SidebarItem({
         type="button"
         onClick={handleClick}
         className={cn(
-          "flex h-14 w-full items-center justify-between text-left font-medium transition-all hover:cursor-pointer hover:bg-slate-300/50 dark:hover:bg-slate-700/50",
+          "flex h-14 w-full items-center justify-between text-left transition-all hover:cursor-pointer hover:bg-slate-300/50 dark:hover:bg-slate-700/50",
           isActive &&
             "bg-slate-300 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-700",
         )}

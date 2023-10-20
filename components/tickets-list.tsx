@@ -7,7 +7,7 @@ interface TicketsListProps {}
 
 export default function TicketsList({}: TicketsListProps) {
   const { data, isLoading, fetchNextPage, hasNextPage } =
-    trpc.getAllTickets.useInfiniteQuery(
+    trpc.ticket.getAllTickets.useInfiniteQuery(
       {
         limit: INFINITE_QUERY_LIMIT,
       },
@@ -19,5 +19,5 @@ export default function TicketsList({}: TicketsListProps) {
 
   const tickets = data?.pages.flatMap((page) => page.tickets);
 
-  return <div className="flex flex-1 flex-col justify-end">TicketsList</div>;
+  return <div className="flex h-full flex-1 flex-col">TicketsList</div>;
 }

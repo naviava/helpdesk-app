@@ -38,7 +38,7 @@ const managerRoutes = [
 ];
 
 export default function SidebarRoutes({}: SidebarRoutesProps) {
-  const { data: user } = trpc.getUserProfile.useQuery();
+  const { data: user } = trpc.user.getUserProfile.useQuery();
 
   return (
     <ScrollArea className="mt-24 w-full">
@@ -57,18 +57,20 @@ export default function SidebarRoutes({}: SidebarRoutesProps) {
           ))}
         </section>
         {/* Manager Routes */}
-        <section>
-          <SidebarPanelHeader text="Manage Requests" />
-          <Separator />
-          {managerRoutes.map((route) => (
-            <SidebarItem
-              key={route.label}
-              icon={route.icon}
-              label={route.label}
-              href={route.href}
-            />
-          ))}
-        </section>
+        {user?.role !== "USER" && (
+          <section>
+            <SidebarPanelHeader text="Manage Requests" />
+            <Separator />
+            {managerRoutes.map((route) => (
+              <SidebarItem
+                key={route.label}
+                icon={route.icon}
+                label={route.label}
+                href={route.href}
+              />
+            ))}
+          </section>
+        )}
       </div>
     </ScrollArea>
   );

@@ -8,7 +8,7 @@ interface DashboardLayoutProps {
 export default async function DashboardLayout({
   children,
 }: DashboardLayoutProps) {
-  const user = await serverClient.getUserProfile();
+  const user = await serverClient.user.getUserProfile();
   if (!user) return redirect("/");
 
   return <>{children}</>;

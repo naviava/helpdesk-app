@@ -11,10 +11,13 @@ interface MyTicketsPageProps {}
 export default function MyTicketsPage({}: MyTicketsPageProps) {
   return (
     <>
-      <PageHeading
-        title="My Tickets"
-        tagline="All your unresolved tickets are displayed here"
-      />
+      <div className="flex items-center justify-between">
+        <PageHeading
+          title="My Tickets"
+          tagline="All your unresolved tickets are displayed here"
+        />
+        <div>TODO: Search bar</div>
+      </div>
       <TicketsList />
     </>
   );

@@ -37,8 +37,8 @@ const formSchema = z.object({
 export default function CreateTicketForm() {
   const router = useRouter();
 
-  const { data: categories } = trpc.getTicketCategories.useQuery();
-  const { data: departments } = trpc.getDepartments.useQuery();
+  const { data: categories } = trpc.list.getTicketCategories.useQuery();
+  const { data: departments } = trpc.list.getDepartments.useQuery();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,14 +54,15 @@ export default function CreateTicketForm() {
 
   const { isValid } = useMemo(() => form.formState, [form.formState]);
 
-  const { mutate: createTicket, isLoading } = trpc.createTicket.useMutation({
-    onError: ({ message }) => toast.error(message),
-    onSuccess: () => {
-      form.reset();
-      router.push("/user/tickets");
-      toast.success("Ticket created");
-    },
-  });
+  const { mutate: createTicket, isLoading } =
+    trpc.ticket.createTicket.useMutation({
+      onError: ({ message }) => toast.error(message),
+      onSuccess: () => {
+        form.reset();
+        router.push("/user/tickets");
+        toast.success("Ticket created");
+      },
+    });
 
   const onSubmit = useCallback(
     (values: z.infer<typeof formSchema>) => createTicket(values),

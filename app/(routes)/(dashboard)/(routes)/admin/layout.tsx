@@ -6,7 +6,7 @@ interface AdminLayoutProps {
 }
 
 export default async function AdminLayout({ children }: AdminLayoutProps) {
-  const user = await serverClient.getUserProfile();
+  const user = await serverClient.user.getUserProfile();
   if (!user || user.role !== "ADMIN") return redirect("/");
 
   return <>{children}</>;
