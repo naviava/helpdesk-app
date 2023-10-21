@@ -21,11 +21,11 @@ export default function NavbarRoutes({ user }: NavbarRoutesProps) {
       {user?.role === "ADMIN" && (
         <Button
           type="button"
-          variant="link"
+          variant="ghost"
           size="icon"
           onClick={() => router.push("/admin")}
         >
-          <ShieldCheck className="h-7 w-7 text-sky-400 dark:text-sky-700" />
+          <ShieldCheck className="h-7 w-7 text-sky-400 transition-all duration-1000 hover:text-emerald-600 dark:text-sky-700" />
         </Button>
       )}
       <AuthButton user={user} />

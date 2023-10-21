@@ -119,7 +119,11 @@ export const ticketRouter = router({
         },
       });
 
-      if (!tickets) return [];
+      if (!tickets)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "No tickets matching the criteria",
+        });
 
       return tickets;
     } catch (err) {
@@ -134,37 +138,156 @@ export const ticketRouter = router({
   /**
    * PRIVATE: Get unresolved tickets created by logged in user.
    */
-  getUserTickets: privateProcedure
+  getUserTickets: privateProcedure.query(async ({ ctx }) => {
+    try {
+      const tickets = await db.ticket.findMany({
+        where: {
+          userEmail: ctx.user.email,
+          status: { not: "RESOLVED" },
+        },
+        orderBy: { updatedAt: "desc" },
+        include: {
+          category: true,
+          department: true,
+          user: true,
+          agent: true,
+        },
+      });
+
+      if (!tickets)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "No tickets matching the criteria",
+        });
+
+      return tickets;
+    } catch (err) {
+      console.log("[GET_USER_TICKETS_ERROR]", err);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Internal Error",
+      });
+    }
+  }),
+
+  /**
+   * PRIVATE: Get all open tickets. Used for helpdesk.
+   */
+  getAllOpenTickets: privateProcedure.query(async ({ ctx }) => {
+    try {
+      if (ctx.user.role === "USER" || ctx.user.role === "MANAGER")
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Unauthorized action",
+        });
+
+      const tickets = await db.ticket.findMany({
+        where: {
+          status: { not: "RESOLVED" },
+        },
+        orderBy: { updatedAt: "desc" },
+        include: {
+          category: true,
+          department: true,
+          user: true,
+          agent: true,
+        },
+      });
+
+      if (!tickets)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "No tickets matching the criteria",
+        });
+
+      return tickets;
+    } catch (err) {
+      console.log("[GET_ALL_OPEN_TICKETS_ERROR]", err);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Internal Error",
+      });
+    }
+  }),
+
+  /**
+   * PRIVATE: Get assigned tickets. Used for helpdesk.
+   * Only logged in agent can access this API.
+   */
+  getAssignedTickets: privateProcedure.query(async ({ ctx }) => {
+    try {
+      if (ctx.user.role === "USER" || ctx.user.role === "MANAGER")
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Unauthorized action",
+        });
+
+      const tickets = await db.ticket.findMany({
+        where: {
+          agentEmail: ctx.user.email,
+          status: { not: "RESOLVED" },
+        },
+        orderBy: { updatedAt: "desc" },
+        include: {
+          category: true,
+          department: true,
+          user: true,
+          agent: true,
+        },
+      });
+
+      if (!tickets)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "No tickets matching the criteria",
+        });
+
+      return tickets;
+    } catch (err) {
+      console.log("[GET_ASSIGNED_TICKETS_ERROR]", err);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Internal Error",
+      });
+    }
+  }),
+
+  /**
+   * PRIVATE: Get ticket by ID. Is only accessible to
+   * helpdesk and the user who created the ticket.
+   */
+  getTicketById: privateProcedure
     .input(
       z.object({
-        limit: z.number().min(1).max(100).nullish(),
-        cursor: z.string().nullish(),
+        id: z.string().min(1),
       }),
     )
     .query(async ({ ctx, input }) => {
       try {
-        const { cursor } = input;
-        const limit = input.limit ?? INFINITE_QUERY_LIMIT;
+        let dataQuery: any = { id: input.id };
 
-        const tickets = await db.ticket.findMany({
-          take: limit + 1,
-          where: {
-            userEmail: ctx.user.email,
-            status: { not: "RESOLVED" },
+        if (ctx.user.role === "USER" || ctx.user.role === "MANAGER")
+          dataQuery = { id: input.id, userEmail: ctx.user.email };
+
+        const ticket = await db.ticket.findUnique({
+          where: dataQuery,
+          include: {
+            category: true,
+            department: true,
+            user: true,
+            agent: true,
           },
-          orderBy: { updatedAt: "desc" },
-          cursor: cursor ? { id: cursor } : undefined,
         });
 
-        let nextCursor: typeof cursor | undefined = undefined;
-        if (tickets.length > limit) {
-          const nextItem = tickets.pop();
-          nextCursor = nextItem?.id;
-        }
+        if (!ticket)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Ticket not found",
+          });
 
-        return { tickets, nextCursor };
+        return ticket;
       } catch (err) {
-        console.log("[GET_ALL_TICKETS_ERROR]", err);
+        console.log("[GET_ASSIGNED_TICKETS_ERROR]", err);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Internal Error",

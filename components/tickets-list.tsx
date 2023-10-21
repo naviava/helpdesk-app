@@ -5,11 +5,22 @@ import { DataTable } from "@/components/tickets-table/data-table";
 
 import { serverClient } from "@/app/_trpc/server-client";
 
-export default async function TicketsList() {
-  const user = await serverClient.user.getUserProfile();
-  const tickets = await serverClient.ticket.getAllTickets();
+interface TicketsListProps {
+  data: Awaited<
+    ReturnType<
+      (typeof serverClient)["ticket"][
+        | "getUserTickets"
+        | "getAllTickets"
+        | "getAllOpenTickets"
+        | "getAssignedTickets"]
+    >
+  >;
+}
 
-  const ticketsData = tickets.map((ticket) => ({
+export default async function TicketsList({ data }: TicketsListProps) {
+  const user = await serverClient.user.getUserProfile();
+
+  const ticketsData = data.map((ticket) => ({
     ...ticket,
     category: ticket.category?.name,
     department: ticket.department?.name,

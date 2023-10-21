@@ -1,6 +1,6 @@
 "use client";
 
-import { GanttChart, PlusCircle, ShieldPlus, Cuboid } from "lucide-react";
+import { GanttChart, PlusCircle, ShieldPlus, Cuboid, User } from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -24,16 +24,16 @@ const userRoutes = [
   },
 ];
 
-const managerRoutes = [
+const helpdeskRoutes = [
   {
-    icon: ShieldPlus,
-    label: "Create Request",
-    href: "/manager/create-request",
+    icon: User,
+    label: "Assigned Tickets",
+    href: "/agent/assigned",
   },
   {
     icon: Cuboid,
-    label: "All Requests",
-    href: "/manager/requests",
+    label: "All Open Tickets",
+    href: "/agent/all-tickets",
   },
 ];
 
@@ -43,6 +43,21 @@ export default function SidebarRoutes({}: SidebarRoutesProps) {
   return (
     <ScrollArea className="mt-24 w-full">
       <div className="space-y-20">
+        {/* Helpdesk Routes */}
+        {(user?.role === "ADMIN" || user?.role === "AGENT") && (
+          <section>
+            <SidebarPanelHeader text="Manage Requests" />
+            <Separator />
+            {helpdeskRoutes.map((route) => (
+              <SidebarItem
+                key={route.label}
+                icon={route.icon}
+                label={route.label}
+                href={route.href}
+              />
+            ))}
+          </section>
+        )}
         {/* User Routes */}
         <section>
           <SidebarPanelHeader text="Manage Tickets" />
@@ -56,21 +71,6 @@ export default function SidebarRoutes({}: SidebarRoutesProps) {
             />
           ))}
         </section>
-        {/* Manager Routes */}
-        {user?.role !== "USER" && (
-          <section>
-            <SidebarPanelHeader text="Manage Requests" />
-            <Separator />
-            {managerRoutes.map((route) => (
-              <SidebarItem
-                key={route.label}
-                icon={route.icon}
-                label={route.label}
-                href={route.href}
-              />
-            ))}
-          </section>
-        )}
       </div>
     </ScrollArea>
   );
