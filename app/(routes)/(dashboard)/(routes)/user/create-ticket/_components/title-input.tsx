@@ -28,7 +28,7 @@ export default function TitleInput({ form, disabled }: TitleInputProps) {
               <Input disabled={disabled} {...field} />
             </FormControl>
             <FormDescription className="italic">
-              Brief description of your issue
+              Brief overview of your issue
             </FormDescription>
             <FormMessage />
           </FormItem>

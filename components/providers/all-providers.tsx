@@ -1,10 +1,11 @@
+import { Toaster } from "sonner";
 import { getServerSession } from "next-auth";
 
-import TRPCProvider from "@/app/_trpc/trpc-provider";
+import NextUIProvider from "./next-ui-provider";
 import { ThemeProvider } from "./theme-provider";
 import SessionProvider from "./session-provider";
-import NextUIProvider from "./next-ui-provider";
-import { ToastProvider } from "./toast-provider";
+import { EdgeStoreProvider } from "@/lib/edgestore";
+import TRPCProvider from "@/app/_trpc/trpc-provider";
 
 interface AllProvidersProps {
   children: React.ReactNode;
@@ -19,12 +20,11 @@ export default async function AllProviders({ children }: AllProvidersProps) {
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
-          enableSystem
           disableTransitionOnChange
         >
           <TRPCProvider>
-            {children}
-            <ToastProvider />
+            <EdgeStoreProvider>{children}</EdgeStoreProvider>
+            <Toaster position="top-center" />
           </TRPCProvider>
         </ThemeProvider>
       </NextUIProvider>

@@ -10,7 +10,7 @@ import { serverClient } from "@/app/_trpc/server-client";
 import { ShieldCheck } from "lucide-react";
 
 interface NavbarRoutesProps {
-  user: Awaited<ReturnType<(typeof serverClient)["getUserProfile"]>>;
+  user: Awaited<ReturnType<(typeof serverClient)["user"]["getUserProfile"]>>;
 }
 
 export default function NavbarRoutes({ user }: NavbarRoutesProps) {
@@ -29,7 +29,6 @@ export default function NavbarRoutes({ user }: NavbarRoutesProps) {
         </Button>
       )}
       <AuthButton user={user} />
-      <ThemeToggleButton />
     </div>
   );
 }

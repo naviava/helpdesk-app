@@ -1,23 +1,26 @@
-"use client";
+import { format } from "date-fns";
 
-import { trpc } from "@/app/_trpc/client";
-import { INFINITE_QUERY_LIMIT } from "@/config/infinite-query";
+import { columns } from "@/components/tickets-table/columns";
+import { DataTable } from "@/components/tickets-table/data-table";
 
-interface TicketsListProps {}
+import { serverClient } from "@/app/_trpc/server-client";
 
-export default function TicketsList({}: TicketsListProps) {
-  const { data, isLoading, fetchNextPage, hasNextPage } =
-    trpc.ticket.getAllTickets.useInfiniteQuery(
-      {
-        limit: INFINITE_QUERY_LIMIT,
-      },
-      {
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-        keepPreviousData: true,
-      },
-    );
+export default async function TicketsList() {
+  const user = await serverClient.user.getUserProfile();
+  const tickets = await serverClient.ticket.getAllTickets();
 
-  const tickets = data?.pages.flatMap((page) => page.tickets);
+  const ticketsData = tickets.map((ticket) => ({
+    ...ticket,
+    category: ticket.category?.name,
+    department: ticket.department?.name,
+    owner: ticket.user.name,
+    ownerEmail: ticket.user.email,
+    agent: ticket.agent?.name,
+    agentEmail: ticket.agent?.email,
+    currentUserRole: user?.role,
+    createdAt: format(new Date(ticket.createdAt), "MMM dd, yy @ HH:mm"),
+    updatedAt: format(new Date(ticket.updatedAt), "MMM dd, yy @ HH:mm"),
+  }));
 
-  return <div className="flex h-full flex-1 flex-col">TicketsList</div>;
+  return <DataTable columns={columns} data={ticketsData} />;
 }

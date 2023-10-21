@@ -27,7 +27,7 @@ export default function DepartmentCombobox({
         name="departmentId"
         render={({ field }) => (
           <FormItem className="flex flex-col">
-            <FormLabel>Category</FormLabel>
+            <FormLabel>Department</FormLabel>
             <FormControl>
               <Combobox options={options} {...field} disabled={disabled} />
             </FormControl>

@@ -107,42 +107,32 @@ export const ticketRouter = router({
   /**
    * PRIVATE: Get all tickets API.
    */
-  getAllTickets: privateProcedure
-    .input(
-      z.object({
-        limit: z.number().min(1).max(100).nullish(),
-        cursor: z.string().nullish(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      try {
-        const { cursor } = input;
-        const limit = input.limit ?? INFINITE_QUERY_LIMIT;
+  getAllTickets: privateProcedure.query(async ({ ctx }) => {
+    try {
+      const tickets = await db.ticket.findMany({
+        orderBy: { updatedAt: "desc" },
+        include: {
+          category: true,
+          department: true,
+          user: true,
+          agent: true,
+        },
+      });
 
-        const tickets = await db.ticket.findMany({
-          take: limit + 1,
-          orderBy: { updatedAt: "desc" },
-          cursor: cursor ? { id: cursor } : undefined,
-        });
+      if (!tickets) return [];
 
-        let nextCursor: typeof cursor | undefined = undefined;
-        if (tickets.length > limit) {
-          const nextItem = tickets.pop();
-          nextCursor = nextItem?.id;
-        }
-
-        return { tickets, nextCursor };
-      } catch (err) {
-        console.log("[GET_ALL_TICKETS_ERROR]", err);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Internal Error",
-        });
-      }
-    }),
+      return tickets;
+    } catch (err) {
+      console.log("[GET_ALL_TICKETS_ERROR]", err);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Internal Error",
+      });
+    }
+  }),
 
   /**
-   * PRIVATE: Get tickets created by logged in user.
+   * PRIVATE: Get unresolved tickets created by logged in user.
    */
   getUserTickets: privateProcedure
     .input(
@@ -158,7 +148,10 @@ export const ticketRouter = router({
 
         const tickets = await db.ticket.findMany({
           take: limit + 1,
-          where: { userEmail: ctx.user.email },
+          where: {
+            userEmail: ctx.user.email,
+            status: { not: "RESOLVED" },
+          },
           orderBy: { updatedAt: "desc" },
           cursor: cursor ? { id: cursor } : undefined,
         });

@@ -4,7 +4,7 @@ import { useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 
 import * as z from "zod";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,11 +13,11 @@ import { PriorityEnum } from "@/types";
 
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import AttachmentInput from "@/components/ticket-utilities/attachment-input";
+import CategoryCombobox from "@/components/ticket-utilities/category-combobox";
+import DepartmentCombobox from "@/components/ticket-utilities/department-combobox";
 import PriorityRadioButtons from "./priority-radio-buttons";
-import DepartmentCombobox from "./department-combobox";
-import CategoryCombobox from "./category-combobox";
 import MessageTextarea from "./message-textarea";
-import AttachmentInput from "./attachment-input";
 import TitleInput from "./title-input";
 
 import { trpc } from "@/app/_trpc/client";

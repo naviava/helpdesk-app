@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 import * as z from "zod";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Loader } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";

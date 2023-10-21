@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 
 import { signOut } from "next-auth/react";
-import { LogOut, Settings, UserCircle2 } from "lucide-react";
+import { ChevronDown, LogOut, Settings, UserCircle2 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -19,7 +19,7 @@ import {
 import { serverClient } from "@/app/_trpc/server-client";
 
 interface AuthButtonProps {
-  user: Awaited<ReturnType<(typeof serverClient)["getUserProfile"]>>;
+  user: Awaited<ReturnType<(typeof serverClient)["user"]["getUserProfile"]>>;
 }
 
 export default function AuthButton({ user }: AuthButtonProps) {
@@ -35,7 +35,7 @@ export default function AuthButton({ user }: AuthButtonProps) {
       {
         label: "Manage account",
         Icon: Settings,
-        action: () => router.push("/user/manage-account"),
+        action: () => {},
       },
       {
         label: "Sign out",
@@ -49,15 +49,34 @@ export default function AuthButton({ user }: AuthButtonProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="cursor-pointer">
-        <Avatar>
-          <AvatarImage src={user?.image || ""} alt="User profile image" />
-          <AvatarFallback className="bg-slate-300 text-xl font-extrabold dark:bg-slate-700">
-            {user?.name?.[0].toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+        <div className="flex items-center gap-x-2">
+          <Avatar className="h-6 w-6">
+            <AvatarImage src={user?.image || ""} alt="User profile image" />
+            <AvatarFallback className="bg-slate-300 text-sm font-medium dark:bg-slate-700">
+              {user?.name?.[0].toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <p className="text-sm">Hello, {user?.name}</p>
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="dark:bg-slate-800">
-        <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          <div className="flex gap-x-4 pt-2">
+            <Avatar className="h-14 w-14">
+              <AvatarImage src={user?.image || ""} alt="User profile image" />
+              <AvatarFallback className="bg-slate-300 text-3xl font-medium dark:bg-slate-700">
+                {user?.name?.[0].toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <div className="space-y-1 text-xl">{user?.name}</div>
+              <p className="text-xs font-normal text-muted-foreground">
+                {user?.email}
+              </p>
+            </div>
+          </div>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator className="dark:bg-slate-700" />
         {accountOptions.map((option) => (
           <DropdownMenuItem
