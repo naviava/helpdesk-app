@@ -7,7 +7,7 @@ export default async function MyTicketsPage() {
   const tickets = await serverClient.ticket.getUserTickets();
 
   return (
-    <>
+    <div className="px-2 py-6 md:p-6">
       <PageHeading
         title="My Tickets"
         tagline="All your unresolved tickets are displayed here"
@@ -15,6 +15,6 @@ export default async function MyTicketsPage() {
       <div className="mt-4">
         <TicketsList data={tickets} />
       </div>
-    </>
+    </div>
   );
 }

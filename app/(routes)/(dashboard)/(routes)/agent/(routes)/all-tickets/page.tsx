@@ -6,7 +6,7 @@ export default async function AllOpenTicketsPage() {
   const tickets = await serverClient.ticket.getAllOpenTickets();
 
   return (
-    <>
+    <div className="px-2 py-6 md:p-6">
       <PageHeading
         title="All Open Tickets"
         tagline="Assign any unassigned tickets ASAP"
@@ -14,6 +14,6 @@ export default async function AllOpenTicketsPage() {
       <div className="mt-4">
         <TicketsList data={tickets} />
       </div>
-    </>
+    </div>
   );
 }

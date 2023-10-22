@@ -56,7 +56,7 @@ export default function AuthButton({ user }: AuthButtonProps) {
               {user?.name?.[0].toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <p className="text-sm">Hello, {user?.name}</p>
+          <p className="text-sm">Hi, {user?.name}</p>
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </div>
       </DropdownMenuTrigger>
