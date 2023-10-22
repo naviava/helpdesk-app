@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { toast } from "sonner";
@@ -9,18 +9,19 @@ import { Button } from "@/components/ui/button";
 
 import { trpc } from "@/app/_trpc/client";
 
-interface AssignTicketButtonProps {
-  self?: boolean;
-}
-
-export default function AssignTicketButton({ self }: AssignTicketButtonProps) {
+export default function AssignTicketButton() {
   const router = useRouter();
   const params = useParams();
+  const [isVisible, setIsVisible] = useState(true);
 
   const { data: user } = trpc.user.getUserProfile.useQuery();
   const { data: ticket } = trpc.ticket.getTicketById.useQuery({
     id: params.caseId as string,
   });
+
+  useEffect(() => {
+    if (user?.email === ticket?.agent?.email) setIsVisible(false);
+  }, [user?.email, ticket?.agent?.email]);
 
   const { mutate: assignTicket, isLoading } =
     trpc.ticket.assignTicket.useMutation({
@@ -28,6 +29,7 @@ export default function AssignTicketButton({ self }: AssignTicketButtonProps) {
       onSuccess: () => {
         router.refresh();
         toast.success("Ticket assigned");
+        setIsVisible(false);
       },
     });
 
@@ -42,18 +44,21 @@ export default function AssignTicketButton({ self }: AssignTicketButtonProps) {
 
   if (!user) return null;
 
-  if (self && user.email !== ticket?.agent?.email)
-    return (
-      <Button
-        variant="theme"
-        size="sm"
-        disabled={isLoading}
-        onClick={() => handleAssign(user.email)}
-        className="h-fit"
-      >
-        Assign to me
-      </Button>
-    );
-
-  return null;
+  return (
+    <>
+      {isVisible ? (
+        <Button
+          variant="theme"
+          size="sm"
+          disabled={isLoading}
+          onClick={() => handleAssign(user.email)}
+          className="h-fit"
+        >
+          Assign to me
+        </Button>
+      ) : (
+        <></>
+      )}
+    </>
+  );
 }

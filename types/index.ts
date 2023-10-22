@@ -13,7 +13,7 @@ export type TicketFormType = UseFormReturn<
     priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
     categoryId?: string | null | undefined;
     departmentId?: string | null | undefined;
-    attachmentUrl?: string | null | undefined;
+    attachmentUrl?: string[] | null | undefined;
   },
   any,
   undefined

@@ -14,7 +14,7 @@ interface SidebarRoutesProps {}
 const userRoutes = [
   {
     icon: PlusCircle,
-    label: "Create Ticket",
+    label: "New Ticket",
     href: "/user/create-ticket",
   },
   {
@@ -27,12 +27,12 @@ const userRoutes = [
 const helpdeskRoutes = [
   {
     icon: User,
-    label: "Assigned Tickets",
+    label: "Assigned to me",
     href: "/agent/assigned",
   },
   {
     icon: Cuboid,
-    label: "All Open Tickets",
+    label: "Open Tickets",
     href: "/agent/all-tickets",
   },
 ];
@@ -46,7 +46,7 @@ export default function SidebarRoutes({}: SidebarRoutesProps) {
         {/* Helpdesk Routes */}
         {(user?.role === "ADMIN" || user?.role === "AGENT") && (
           <section>
-            <SidebarPanelHeader text="Manage Requests" />
+            <SidebarPanelHeader text="Helpdesk" />
             <Separator />
             {helpdeskRoutes.map((route) => (
               <SidebarItem

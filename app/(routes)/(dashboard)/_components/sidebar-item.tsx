@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { LucideIcon } from "lucide-react";
 
+import IconBadge from "@/components/icon-badge";
 import { Separator } from "@/components/ui/separator";
 
 import { cn } from "@/lib/utils";
@@ -15,11 +16,7 @@ interface SidebarItemProps {
   href: string;
 }
 
-export default function SidebarItem({
-  icon: Icon,
-  label,
-  href,
-}: SidebarItemProps) {
+export default function SidebarItem({ icon, label, href }: SidebarItemProps) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -39,7 +36,7 @@ export default function SidebarItem({
         )}
       >
         <div className="flex items-center gap-x-3 px-4">
-          <Icon className="ml-auto h-6 w-6 rounded-lg bg-sky-400 p-1 text-white dark:bg-sky-700" />
+          <IconBadge icon={icon} />
           <span>{label}</span>
         </div>
         <div

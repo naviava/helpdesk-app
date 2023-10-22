@@ -23,7 +23,10 @@ export const statusMap = {
 export default function StatusBadge({ status }: StatusBadgeProps) {
   return (
     <Badge
-      className={cn("h-fit select-none truncate", statusMap[status].colors)}
+      className={cn(
+        "h-fit shrink-0 select-none truncate",
+        statusMap[status].colors,
+      )}
     >
       <span>{statusMap[status].text}</span>
     </Badge>

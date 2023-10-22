@@ -8,6 +8,7 @@ import { ThemeToggleButton } from "@/components/theme-toggle-button";
 
 import { serverClient } from "@/app/_trpc/server-client";
 import { ShieldCheck } from "lucide-react";
+import IconBadge from "@/components/icon-badge";
 
 interface NavbarRoutesProps {
   user: Awaited<ReturnType<(typeof serverClient)["user"]["getUserProfile"]>>;
@@ -25,7 +26,7 @@ export default function NavbarRoutes({ user }: NavbarRoutesProps) {
           size="icon"
           onClick={() => router.push("/admin")}
         >
-          <ShieldCheck className="h-7 w-7 text-sky-400 transition-all duration-1000 hover:text-emerald-600 dark:text-sky-700" />
+          <IconBadge icon={ShieldCheck} size="lg" />
         </Button>
       )}
       <AuthButton user={user} />

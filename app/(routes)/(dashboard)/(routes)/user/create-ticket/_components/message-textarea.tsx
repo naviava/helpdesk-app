@@ -1,14 +1,13 @@
 import { TicketFormType } from "@/types";
 
+import { Textarea } from "@/components/ui/textarea";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
 
 interface MessageTextareaProps {
   form: TicketFormType;
@@ -28,13 +27,8 @@ export default function MessageTextarea({
           <FormItem>
             <FormLabel className="ml-1">Message *</FormLabel>
             <FormControl>
-              <Textarea disabled={disabled} className="h-[20rem]" {...field} />
+              <Textarea disabled={disabled} className="h-[15rem]" {...field} />
             </FormControl>
-            {!field.value && (
-              <FormDescription className="italic">
-                Provide some more details about your issue.
-              </FormDescription>
-            )}
             <FormMessage />
           </FormItem>
         )}

@@ -10,6 +10,8 @@ import { Priority, TicketStatus, UserRole } from "@prisma/client";
 import PriorityTag from "@/components/priority-tag";
 import StatusBadge from "@/components/status-badge";
 
+import { calculateOpenedDuration } from "@/lib/calc-open-duration";
+
 interface TableTicketData {
   id: string;
   refId: string;
@@ -23,24 +25,30 @@ interface TableTicketData {
   agent?: string;
   agentEmail?: string;
   currentUserRole?: UserRole;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const columns: ColumnDef<TableTicketData>[] = [
+  // Ref ID.
   {
     accessorKey: "refId",
-    header: "REF ID",
+    header: ({ column }) => {
+      return <div className="shrink-0">REF ID</div>;
+    },
     cell: ({ row }) => {
       const { id, refId } = row.original;
 
       return (
-        <Link href={`/case/${id}`} className="text-sky-700 hover:underline">
-          {refId}
-        </Link>
+        <div className="min-w-[7rem]">
+          <Link href={`/case/${id}`} className="text-sky-700 hover:underline">
+            {refId}
+          </Link>
+        </div>
       );
     },
   },
+  // Title.
   {
     accessorKey: "title",
     header: ({ column }) => {
@@ -48,7 +56,7 @@ export const columns: ColumnDef<TableTicketData>[] = [
         <div
           role="button"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center"
+          className="flex max-w-[15rem] items-center"
         >
           TICKET NAME
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -59,12 +67,16 @@ export const columns: ColumnDef<TableTicketData>[] = [
       const { id, refId, title } = row.original;
 
       return (
-        <Link href={`/case/${id}`} className="text-sky-700 hover:underline">
+        <Link
+          href={`/case/${id}`}
+          className="line-clamp-1 min-w-[12rem] max-w-[15rem] text-sky-700 hover:underline"
+        >
           {title}
         </Link>
       );
     },
   },
+  // Open for
   {
     accessorKey: "createdAt",
     header: ({ column }) => {
@@ -72,14 +84,21 @@ export const columns: ColumnDef<TableTicketData>[] = [
         <div
           role="button"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center"
+          className="flex items-center whitespace-nowrap"
         >
-          CREATE DATE
+          OPEN FOR
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </div>
       );
     },
+    cell: ({ row }) => {
+      const { createdAt } = row.original;
+      const displayString = calculateOpenedDuration(createdAt);
+
+      return <div>{displayString}</div>;
+    },
   },
+  // Priority
   {
     accessorKey: "priority",
     header: ({ column }) => {
@@ -100,6 +119,7 @@ export const columns: ColumnDef<TableTicketData>[] = [
       return <PriorityTag priority={priority} />;
     },
   },
+  // Status.
   {
     accessorKey: "status",
     header: ({ column }) => {
@@ -120,36 +140,7 @@ export const columns: ColumnDef<TableTicketData>[] = [
       return <StatusBadge status={status} />;
     },
   },
-  {
-    accessorKey: "category",
-    header: ({ column }) => {
-      return (
-        <div
-          role="button"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center"
-        >
-          CATEGORY
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "department",
-    header: ({ column }) => {
-      return (
-        <div
-          role="button"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center"
-        >
-          DEPARTMENT
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </div>
-      );
-    },
-  },
+  // Owner.
   {
     accessorKey: "owner",
     header: ({ column }) => {
@@ -165,6 +156,7 @@ export const columns: ColumnDef<TableTicketData>[] = [
       );
     },
   },
+  // Agent.
   {
     accessorKey: "agent",
     header: ({ column }) => {
@@ -172,7 +164,7 @@ export const columns: ColumnDef<TableTicketData>[] = [
         <div
           role="button"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center"
+          className="flex select-none items-center whitespace-nowrap"
         >
           ASSIGNED TO
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -180,7 +172,6 @@ export const columns: ColumnDef<TableTicketData>[] = [
       );
     },
     cell: ({ row }) => {
-      const { agentEmail } = row.original;
       const agent = row.getValue("agent") as string;
 
       if (!agent)
@@ -189,6 +180,7 @@ export const columns: ColumnDef<TableTicketData>[] = [
       return <span>{agent}</span>;
     },
   },
+  // Last activity.
   {
     accessorKey: "updatedAt",
     header: ({ column }) => {
@@ -196,12 +188,18 @@ export const columns: ColumnDef<TableTicketData>[] = [
         <div
           role="button"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center"
+          className="flex select-none items-center whitespace-nowrap"
         >
           LAST ACTIVITY
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </div>
       );
+    },
+    cell: ({ row }) => {
+      const { updatedAt } = row.original;
+      const displayString = calculateOpenedDuration(updatedAt);
+
+      return <div>{displayString}</div>;
     },
   },
 ];

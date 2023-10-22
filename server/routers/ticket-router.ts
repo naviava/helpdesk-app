@@ -22,7 +22,7 @@ export const ticketRouter = router({
         departmentId: z.string().nullish(),
         priority: PriorityEnum,
         message: z.string().min(3),
-        attachmentUrl: z.string().nullish(),
+        attachmentUrl: z.array(z.string()).nullish(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -52,34 +52,11 @@ export const ticketRouter = router({
         });
       }
 
-      // Create the data query object.
-      const messageData: any = {
-        create: {
-          content: message,
-          userEmail: ctx.user.email,
-        },
-      };
-
-      if (!!attachmentUrl) {
-        messageData.create.attachments = {
-          create: {
-            url: attachmentUrl,
-            name: attachmentUrl.split("/").pop()!,
-          },
-        };
-      }
-
       const newTicketData: any = {
         title,
         refId,
         priority,
         userEmail: ctx.user.email,
-        messages: messageData,
-        logs: {
-          create: {
-            text: `${ctx.user.name} created the ticket.`,
-          },
-        },
       };
 
       if (!!categoryId) {
@@ -90,8 +67,70 @@ export const ticketRouter = router({
         newTicketData.departmentId = departmentId;
       }
 
+      if (!!attachmentUrl && attachmentUrl?.length > 5)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Max 5 files allowed",
+        });
+
       // Ticket is created using data query object.
       const newTicket = await db.ticket.create({ data: newTicketData });
+
+      // Log created for ticket cretion.
+      await db.log.create({
+        data: {
+          ticketId: newTicket.id,
+          text: `${ctx.user.name} created the ticket.`,
+        },
+      });
+
+      let newMessage;
+      if (!!message) {
+        // Message is created.
+        newMessage = await db.message.create({
+          data: {
+            content: message,
+            userEmail: ctx.user.email,
+            ticketId: newTicket.id,
+          },
+        });
+
+        // Log created for message.
+        await db.log.create({
+          data: {
+            ticketId: newTicket.id,
+            text: `${ctx.user.name} sent a message.`,
+          },
+        });
+      }
+
+      // Create attachment if exists.
+      if (
+        !!message &&
+        !!newMessage &&
+        !!attachmentUrl &&
+        attachmentUrl.length > 0
+      ) {
+        for (const url of attachmentUrl) {
+          await db.attachment.create({
+            data: {
+              url,
+              name: `${url.split(".").pop()?.toUpperCase()!} file`,
+              messageId: newMessage.id,
+            },
+          });
+        }
+
+        // Create a single log for all attachments.
+        await db.log.create({
+          data: {
+            ticketId: newTicket.id,
+            text: `${ctx.user.name} added ${attachmentUrl.length} file${
+              attachmentUrl.length === 1 ? "" : "s"
+            }.`,
+          },
+        });
+      }
 
       return { ticketId: newTicket.id };
     }),
@@ -297,6 +336,9 @@ export const ticketRouter = router({
           department: true,
           user: true,
           agent: true,
+          messages: {
+            include: { attachments: true },
+          },
         },
       });
 

@@ -1,6 +1,7 @@
 import { Toaster } from "sonner";
 import { getServerSession } from "next-auth";
 
+import ModalProvider from "./modal-provider";
 import NextUIProvider from "./next-ui-provider";
 import { ThemeProvider } from "./theme-provider";
 import SessionProvider from "./session-provider";
@@ -23,7 +24,10 @@ export default async function AllProviders({ children }: AllProvidersProps) {
           disableTransitionOnChange
         >
           <TRPCProvider>
-            <EdgeStoreProvider>{children}</EdgeStoreProvider>
+            <EdgeStoreProvider>
+              <ModalProvider />
+              {children}
+            </EdgeStoreProvider>
             <Toaster position="top-center" />
           </TRPCProvider>
         </ThemeProvider>

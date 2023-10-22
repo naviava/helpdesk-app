@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { ChevronDown, LogOut, Settings, UserCircle2 } from "lucide-react";
 
+import IconBadge from "@/components/icon-badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -85,7 +86,7 @@ export default function AuthButton({ user }: AuthButtonProps) {
             className="flex gap-2 dark:hover:bg-slate-700"
           >
             {option.label}
-            <option.Icon className="ml-auto h-4 w-4 text-gray-400" />
+            <IconBadge icon={option.Icon} className="ml-auto" />
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
