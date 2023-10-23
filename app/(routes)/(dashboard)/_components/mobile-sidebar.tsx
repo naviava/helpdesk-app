@@ -10,7 +10,7 @@ export default function MobileSidebar() {
     <>
       <div className="md:hidden">
         <Sheet>
-          <SheetTrigger className="pr-4 transition hover:opacity-75 lg:block xl:hidden">
+          <SheetTrigger className="pr-4 transition hover:opacity-75 md:hidden">
             <Menu />
           </SheetTrigger>
           <SheetContent side="left" className="w-[60%] bg-white p-0">
@@ -18,12 +18,15 @@ export default function MobileSidebar() {
           </SheetContent>
         </Sheet>
       </div>
-      <div className="hidden lg:block xl:hidden">
+      <div className="hidden md:block xl:hidden">
         <Sheet>
           <SheetTrigger className="pr-4 transition hover:opacity-75 lg:block xl:hidden">
             <Menu />
           </SheetTrigger>
-          <SheetContent side="right" className="w-[25%] bg-white p-0">
+          <SheetContent
+            side="right"
+            className="w-[30%] bg-white p-0 lg:w-[25%]"
+          >
             <Sidebar />
           </SheetContent>
         </Sheet>

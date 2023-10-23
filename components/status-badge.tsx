@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 
 interface StatusBadgeProps {
   status: TicketStatus;
+  className?: string;
 }
 
 export const statusMap = {
@@ -20,12 +21,13 @@ export const statusMap = {
   RESOLVED: { colors: "bg-emerald-500/20 text-emerald-600", text: "Resolved" },
 };
 
-export default function StatusBadge({ status }: StatusBadgeProps) {
+export default function StatusBadge({ status, className }: StatusBadgeProps) {
   return (
     <Badge
       className={cn(
-        "h-fit shrink-0 select-none truncate",
+        "h-fit w-fit shrink-0 select-none truncate",
         statusMap[status].colors,
+        className,
       )}
     >
       <span>{statusMap[status].text}</span>

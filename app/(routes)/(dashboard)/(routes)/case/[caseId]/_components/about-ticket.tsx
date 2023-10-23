@@ -18,7 +18,7 @@ export default async function AboutTicket({ ticket }: AboutTicketProps) {
         {/* Ticket owner. */}
         <div className="flex-1">
           <h4 className="font-light text-muted-foreground">Ticket Owner</h4>
-          <p>{ticket.user.name}</p>
+          <p>{ticket.owner.name}</p>
         </div>
         <div className="flex-1">
           <h4 className="font-light text-muted-foreground">Priority</h4>

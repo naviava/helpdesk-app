@@ -19,12 +19,12 @@ export default async function CaseIdPage({ params }: CaseIdPageProps) {
         </div>
       )}
       {ticket.messages.length > 0 && (
-        <ScrollArea className="h-[40vh] md:h-[45vh] lg:flex-1">
+        <ScrollArea className="flex h-[40vh] flex-col md:h-[45vh] lg:h-[77vh] xl:h-[70vh]">
           {ticket.messages.map((message) => (
             <MessageBox
               key={message.id}
               message={message}
-              ticketOwnerId={ticket.user.id}
+              ticketOwnerId={ticket.owner.id}
             />
           ))}
         </ScrollArea>

@@ -52,23 +52,22 @@ enum UserRole {
 }
 
 model User {
-  id               String      @id @default(cuid())
-  name             String
-  email            String      @unique
-  emailVerified    DateTime?
-  image            String?
-  hashedPassword   String?
-  role             UserRole    @default(USER)
-  disabled         Boolean     @default(false)
-  departmentId     String?
-  department       Department? @relation(fields: [departmentId], references: [id])
-  accounts         Account[]
-  sessions         Session[]
-  createdTickets   Ticket[]    @relation("UserTicket")
-  assignedTickets  Ticket[]    @relation("AgentTicket")
-  createdRequests  Request[]   @relation("UserRequest")
-  assignedRequests Request[]   @relation("AgentRequest")
-  messages         Message[]
+  id              String          @id @default(cuid())
+  name            String
+  email           String          @unique
+  emailVerified   DateTime?
+  image           String?
+  hashedPassword  String?
+  role            UserRole        @default(USER)
+  disabled        Boolean         @default(false)
+  departmentId    String?
+  department      Department?     @relation(fields: [departmentId], references: [id])
+  accounts        Account[]
+  sessions        Session[]
+  createdTickets  Ticket[]        @relation("UserTicket")
+  assignedTickets Ticket[]        @relation("AgentTicket")
+  messages        Message[]
+  technicalNotes  TechnicalNote[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -91,16 +90,22 @@ enum TicketStatus {
   RESOLVED
 }
 
+enum TicketType {
+  SUPPORT
+  TASK
+}
+
 model Ticket {
   id             String          @id @default(cuid())
   refId          String          @unique
   title          String          @db.Text
+  type           TicketType      @default(SUPPORT)
   priority       Priority        @default(LOW)
   status         TicketStatus    @default(NEW)
-  userEmail      String
-  user           User            @relation("UserTicket", fields: [userEmail], references: [email], onDelete: Restrict)
+  ownerEmail     String
+  owner          User            @relation("UserTicket", fields: [ownerEmail], references: [email], onDelete: Restrict)
   agentEmail     String?
-  agent          User?           @relation("AgentTicket", fields: [agentEmail], references: [id], onDelete: Restrict)
+  agent          User?           @relation("AgentTicket", fields: [agentEmail], references: [email], onDelete: Restrict)
   categoryId     String?
   category       TicketCategory? @relation(fields: [categoryId], references: [id])
   departmentId   String?
@@ -112,65 +117,22 @@ model Ticket {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([userEmail, agentEmail, categoryId, departmentId])
-}
-
-enum RequestStatus {
-  NEW
-  NEW_REPLY
-  WAITING_REPLY
-  ASSET_ISSUED
-  ON_HOLD
-  ASSET_OUT_OF_STOCK
-  RESOLVED
-}
-
-enum MgrConfirm {
-  PENDING
-  CONFIRMED
-  DENIED
-}
-
-model Request {
-  id             String           @id @default(cuid())
-  refId          String
-  title          String           @db.Text
-  priority       Priority         @default(LOW)
-  status         RequestStatus    @default(NEW)
-  mgrConfirm     MgrConfirm       @default(PENDING)
-  userEmail      String
-  user           User             @relation("UserRequest", fields: [userEmail], references: [email], onDelete: Restrict)
-  agentEmail     String?
-  agent          User?            @relation("AgentRequest", fields: [agentEmail], references: [id], onDelete: Restrict)
-  categoryId     String?
-  category       RequestCategory? @relation(fields: [categoryId], references: [id])
-  departmentId   String?
-  department     Department?      @relation(fields: [departmentId], references: [id])
-  messages       Message[]
-  technicalNotes TechnicalNote[]
-  logs           Log[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userEmail, agentEmail, categoryId, departmentId])
+  @@index([ownerEmail, agentEmail, categoryId, departmentId])
 }
 
 model Message {
   id          String       @id @default(cuid())
   content     String       @db.Text
-  userEmail   String
-  user        User         @relation(fields: [userEmail], references: [email])
-  ticketId    String?
-  ticket      Ticket?      @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-  requestId   String?
-  request     Request?     @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  senderEmail String
+  sender      User         @relation(fields: [senderEmail], references: [email])
+  ticketId    String
+  ticket      Ticket       @relation(fields: [ticketId], references: [id], onDelete: Cascade)
   attachments Attachment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([userEmail, ticketId, requestId])
+  @@index([senderEmail, ticketId])
 }
 
 model Attachment {
@@ -187,31 +149,29 @@ model Attachment {
 }
 
 model TechnicalNote {
-  id        String   @id @default(cuid())
-  message   String   @db.Text
-  ticketId  String?
-  ticket    Ticket?  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-  requestId String?
-  request   Request? @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  id         String @id @default(cuid())
+  content    String @db.Text
+  ownerEmail String
+  owner      User   @relation(fields: [ownerEmail], references: [email])
+  ticketId   String
+  ticket     Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([ticketId, requestId])
+  @@index([ownerEmail, ticketId])
 }
 
 model Log {
-  id        String   @id @default(cuid())
-  text      String   @db.Text
-  ticketId  String?
-  ticket    Ticket?  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-  requestId String?
-  request   Request? @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  id       String @id @default(cuid())
+  text     String @db.Text
+  ticketId String
+  ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([ticketId, requestId])
+  @@index([ticketId])
 }
 
 model TicketCategory {
@@ -220,16 +180,9 @@ model TicketCategory {
   tickets Ticket[]
 }
 
-model RequestCategory {
-  id       String    @id @default(cuid())
-  name     String    @unique
-  requests Request[]
-}
-
 model Department {
-  id       String    @id @default(cuid())
-  name     String    @unique
-  users    User[]
-  tickets  Ticket[]
-  requests Request[]
+  id      String   @id @default(cuid())
+  name    String   @unique
+  users   User[]
+  tickets Ticket[]
 }

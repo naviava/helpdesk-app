@@ -6,11 +6,10 @@ import { PriorityEnum } from "@/types";
 import { db } from "@/lib/db";
 import { generateRefId } from "@/lib/generate-ref-id";
 import { privateProcedure, router } from "@/server/trpc";
-import { INFINITE_QUERY_LIMIT } from "@/config/infinite-query";
 
 export const ticketRouter = router({
   /**
-   * PRIVATE: Create ticket API.
+   * PRIVATE MUTATION: Create ticket API.
    * Takes in title*, category, department,
    * priority*(default: LOW), message*, attachment.
    */
@@ -56,7 +55,7 @@ export const ticketRouter = router({
         title,
         refId,
         priority,
-        userEmail: ctx.user.email,
+        ownerEmail: ctx.user.email,
       };
 
       if (!!categoryId) {
@@ -88,7 +87,7 @@ export const ticketRouter = router({
       const newMessage = await db.message.create({
         data: {
           content: message,
-          userEmail: ctx.user.email,
+          senderEmail: ctx.user.email,
           ticketId: newTicket.id,
         },
       });
@@ -130,7 +129,7 @@ export const ticketRouter = router({
     }),
 
   /**
-   * PRIVATE: Assign ticket API.
+   * PRIVATE MUTATION: Assign ticket API.
    * Only agents and admin can use this API.
    */
   assignTicket: privateProcedure
@@ -178,7 +177,10 @@ export const ticketRouter = router({
 
       await db.log.create({
         data: {
-          text: `Ticket assigned to ${updatedTicket.agent?.name}.`,
+          text:
+            updatedTicket.agent?.email === ctx.user.email
+              ? `${ctx.user.name} assigned the ticket to themself.`
+              : `${ctx.user.name} assigned the ticket to ${updatedTicket.agent?.name}.`,
           ticketId: updatedTicket.id,
         },
       });
@@ -187,8 +189,8 @@ export const ticketRouter = router({
     }),
 
   /**
-   * PRIVATE: Create message. Allows ticket owner and
-   * agents to send a message, tied to the ticket.
+   * PRIVATE MUTATION: Create message. Allows ticket owner
+   * and agents to send a message, tied to the ticket.
    */
   createMessage: privateProcedure
     .input(
@@ -203,7 +205,7 @@ export const ticketRouter = router({
 
       const existingTicket = await db.ticket.findUnique({
         where: { id: ticketId },
-        include: { user: true },
+        include: { owner: true },
       });
 
       if (!existingTicket)
@@ -211,7 +213,7 @@ export const ticketRouter = router({
 
       if (
         !(ctx.user.role === "ADMIN" || ctx.user.role === "AGENT") &&
-        ctx.user.email !== existingTicket.user.email
+        ctx.user.email !== existingTicket.owner.email
       )
         throw new TRPCError({
           code: "UNAUTHORIZED",
@@ -229,7 +231,7 @@ export const ticketRouter = router({
         data: {
           content,
           ticketId,
-          userEmail: ctx.user.email,
+          senderEmail: ctx.user.email,
         },
       });
 
@@ -240,18 +242,44 @@ export const ticketRouter = router({
             text: `${ctx.user.name} sent a message.`,
           },
         });
+
+        await db.ticket.update({
+          where: { id: ticketId },
+          data: {
+            status:
+              existingTicket.owner.email === ctx.user.email
+                ? "NEW_REPLY"
+                : "WAITING_REPLY",
+            updatedAt: new Date(Date.now()),
+          },
+        });
       }
 
-      if (!!message && !!attachmentUrl && attachmentUrl.length > 0) {
+      if (!!attachmentUrl && attachmentUrl.length > 0) {
+        for (const url of attachmentUrl) {
+          await db.attachment.create({
+            data: {
+              url,
+              name: `${url.split(".").pop()?.toUpperCase() ?? "UNKNOWN"}`,
+              messageId: message.id,
+            },
+          });
+        }
+
+        // Create a single log for all attachments.
+        await db.log.create({
+          data: {
+            ticketId,
+            text: `${ctx.user.name} added ${attachmentUrl.length} ${
+              attachmentUrl.length === 1 ? "file." : "files."
+            }`,
+          },
+        });
       }
     }),
 
   /**
-   * Query APIs start here.
-   */
-
-  /**
-   * PRIVATE: Get all tickets API.
+   * PRIVATE QUERY: Get all tickets API.
    */
   getAllTickets: privateProcedure.query(async ({ ctx }) => {
     const tickets = await db.ticket.findMany({
@@ -259,7 +287,7 @@ export const ticketRouter = router({
       include: {
         category: true,
         department: true,
-        user: true,
+        owner: true,
         agent: true,
       },
     });
@@ -274,19 +302,20 @@ export const ticketRouter = router({
   }),
 
   /**
-   * PRIVATE: Get unresolved tickets created by logged in user.
+   * PRIVATE QUERY: Get unresolved tickets
+   * created by logged in user.
    */
   getUserTickets: privateProcedure.query(async ({ ctx }) => {
     const tickets = await db.ticket.findMany({
       where: {
-        userEmail: ctx.user.email,
+        ownerEmail: ctx.user.email,
         status: { not: "RESOLVED" },
       },
       orderBy: { updatedAt: "desc" },
       include: {
         category: true,
         department: true,
-        user: true,
+        owner: true,
         agent: true,
       },
     });
@@ -301,7 +330,7 @@ export const ticketRouter = router({
   }),
 
   /**
-   * PRIVATE: Get all open tickets. Used for helpdesk.
+   * PRIVATE QUERY: Get all open tickets. Used for helpdesk.
    * Only logged in agent and admins can access this API.
    */
   getAllOpenTickets: privateProcedure.query(async ({ ctx }) => {
@@ -319,7 +348,7 @@ export const ticketRouter = router({
       include: {
         category: true,
         department: true,
-        user: true,
+        owner: true,
         agent: true,
       },
     });
@@ -334,7 +363,7 @@ export const ticketRouter = router({
   }),
 
   /**
-   * PRIVATE: Get assigned tickets. Used for helpdesk.
+   * PRIVATE QUERY: Get assigned tickets. Used for helpdesk.
    * Only logged in agent can access this API.
    */
   getAssignedTickets: privateProcedure.query(async ({ ctx }) => {
@@ -353,7 +382,7 @@ export const ticketRouter = router({
       include: {
         category: true,
         department: true,
-        user: true,
+        owner: true,
         agent: true,
       },
     });
@@ -368,8 +397,8 @@ export const ticketRouter = router({
   }),
 
   /**
-   * PRIVATE: Get ticket by ID. Is only accessible to
-   * helpdesk and the user who created the ticket.
+   * PRIVATE QUERY: Get ticket by ID. Is only accessible
+   * to helpdesk and the user who created the ticket.
    */
   getTicketById: privateProcedure
     .input(
@@ -381,17 +410,18 @@ export const ticketRouter = router({
       let dataQuery: any = { id: input.id };
 
       if (ctx.user.role === "USER" || ctx.user.role === "MANAGER")
-        dataQuery = { id: input.id, userEmail: ctx.user.email };
+        dataQuery = { id: input.id, ownerEmail: ctx.user.email };
 
       const ticket = await db.ticket.findUnique({
         where: dataQuery,
         include: {
           category: true,
           department: true,
-          user: true,
+          owner: true,
           agent: true,
           messages: {
-            include: { user: true, attachments: true },
+            include: { sender: true, attachments: true },
+            orderBy: { createdAt: "desc" },
           },
         },
       });
@@ -406,7 +436,7 @@ export const ticketRouter = router({
     }),
 
   /**
-   * PRIVATE: Get ticket logs.
+   * PRIVATE QUERY: Get ticket logs.
    */
   getTicketLogs: privateProcedure
     .input(

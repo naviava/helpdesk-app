@@ -4,6 +4,7 @@ import { useCallback, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { z } from "zod";
+import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -13,6 +14,8 @@ import { useUploadModal } from "@/hooks/use-upload-modal";
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import MessageButtons from "./message-buttons";
+
+import { trpc } from "@/app/_trpc/client";
 
 interface MessageInputProps {}
 
@@ -24,7 +27,8 @@ const formSchema = z.object({
 
 export default function MessageInput({}: MessageInputProps) {
   const router = useRouter();
-  const params = useParams();
+  const params = useParams<{ caseId: string }>();
+
   const { edgestore } = useEdgeStore();
   const { onOpen: openUploadModal, urlList, clearUrlList } = useUploadModal();
 
@@ -32,15 +36,12 @@ export default function MessageInput({}: MessageInputProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       content: "",
-      ticketId: params.caseId as string,
+      ticketId: params.caseId,
       attachmentUrl: [],
     },
   });
 
-  const { isValid, isSubmitting } = useMemo(
-    () => form.formState,
-    [form.formState],
-  );
+  const { isValid } = useMemo(() => form.formState, [form.formState]);
 
   const confirmFiles = useCallback(async () => {
     for (const url of urlList) {
@@ -51,10 +52,25 @@ export default function MessageInput({}: MessageInputProps) {
   /**
    * TODO: Mutation to create create.
    */
+  const { mutate: createMessage, isLoading } =
+    trpc.ticket.createMessage.useMutation({
+      onError: ({ message }) => toast.error(message),
+      onSuccess: async () => {
+        form.reset();
 
-  const onSubmit = useCallback((values: z.infer<typeof formSchema>) => {
-    // Call the mutation function here.
-  }, []);
+        confirmFiles();
+        clearUrlList();
+
+        router.refresh();
+        toast.success("Ticket created");
+      },
+    });
+
+  const onSubmit = useCallback(
+    (values: z.infer<typeof formSchema>) =>
+      createMessage({ ...values, attachmentUrl: urlList }),
+    [createMessage, urlList],
+  );
 
   return (
     <Form {...form}>
@@ -67,7 +83,7 @@ export default function MessageInput({}: MessageInputProps) {
               <FormControl>
                 <div>
                   <Textarea
-                    disabled={isSubmitting}
+                    disabled={isLoading}
                     autoComplete="off"
                     placeholder="Write your message here..."
                     className="h-[7rem] resize-none pr-[3.5rem] md:h-[10rem] md:pr-[5.5rem]"
@@ -79,7 +95,7 @@ export default function MessageInput({}: MessageInputProps) {
           )}
         />
         {/* Button group. */}
-        <MessageButtons isValid={isValid} isSubmitting={isSubmitting} />
+        <MessageButtons isValid={isValid} isSubmitting={isLoading} />
       </form>
     </Form>
   );

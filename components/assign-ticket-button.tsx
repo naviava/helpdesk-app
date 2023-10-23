@@ -11,12 +11,12 @@ import { trpc } from "@/app/_trpc/client";
 
 export default function AssignTicketButton() {
   const router = useRouter();
-  const params = useParams();
+  const params = useParams<{ caseId: string }>();
   const [isVisible, setIsVisible] = useState(true);
 
   const { data: user } = trpc.user.getUserProfile.useQuery();
   const { data: ticket } = trpc.ticket.getTicketById.useQuery({
-    id: params.caseId as string,
+    id: params.caseId,
   });
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function AssignTicketButton() {
   const handleAssign = useCallback(
     (agentEmail: string) =>
       assignTicket({
-        ticketId: params.caseId as string,
+        ticketId: params.caseId,
         agentEmail,
       }),
     [params.caseId, assignTicket],

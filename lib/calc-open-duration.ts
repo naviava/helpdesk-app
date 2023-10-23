@@ -20,7 +20,5 @@ export function calculateOpenedDuration(date: Date) {
   if (openedDuration > 0)
     return openedDuration === 1 ? "1 minute" : `${openedDuration} minutes`;
 
-  openedDuration = differenceInSeconds(Date.now(), date);
-  if (openedDuration > 0)
-    return openedDuration === 1 ? "1 second" : `${openedDuration} seconds`;
+  return "now";
 }
