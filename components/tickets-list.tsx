@@ -4,7 +4,6 @@ import { columns } from "@/components/tickets-table/columns";
 import { DataTable } from "@/components/tickets-table/data-table";
 
 import { serverClient } from "@/app/_trpc/server-client";
-import { calculateOpenedDuration } from "@/lib/calc-open-duration";
 
 interface TicketsListProps {
   data: Awaited<
@@ -18,12 +17,20 @@ interface TicketsListProps {
   >;
 }
 
+const priorityMap = {
+  CRITICAL: 1,
+  HIGH: 2,
+  MEDIUM: 3,
+  LOW: 4,
+};
+
 export default async function TicketsList({ data }: TicketsListProps) {
   const user = await serverClient.user.getUserProfile();
 
   const ticketsData = data.map((ticket) => {
     return {
       ...ticket,
+      priorityValue: priorityMap[ticket.priority],
       category: ticket.category?.name,
       department: ticket.department?.name,
       owner: ticket.user.name,

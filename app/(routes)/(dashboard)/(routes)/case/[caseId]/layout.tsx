@@ -31,7 +31,7 @@ export default async function CaseIdLayout({
           <TicketDetails ticket={ticket} />
         </div>
       </div>
-      <div>{children}</div>
+      <div className="flex-1">{children}</div>
     </div>
   );
 }

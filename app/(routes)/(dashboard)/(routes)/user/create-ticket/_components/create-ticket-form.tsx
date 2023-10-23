@@ -164,9 +164,6 @@ export default function CreateTicketForm() {
           </Button>
         </div>
       </form>
-      <button type="button" onClick={() => console.log(urlList)}>
-        Show URL List
-      </button>
     </Form>
   );
 }

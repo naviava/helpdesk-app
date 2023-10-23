@@ -1,3 +1,7 @@
+import { ScrollArea } from "@/components/ui/scroll-area";
+import MessageInput from "./_components/message-input";
+import MessageBox from "./_components/message-box";
+
 import { serverClient } from "@/app/_trpc/server-client";
 
 interface CaseIdPageProps {
@@ -8,10 +12,24 @@ export default async function CaseIdPage({ params }: CaseIdPageProps) {
   const ticket = await serverClient.ticket.getTicketById({ id: params.caseId });
 
   return (
-    <ul className="p-6">
-      {ticket.messages.map((message) =>
-        message.attachments.map((url) => <li key={url.id}>{url.name}</li>),
+    <div className="flex h-full flex-col gap-y-4 px-2 py-4">
+      {ticket.messages.length === 0 && (
+        <div className="flex flex-1 flex-col items-center justify-center">
+          No messages yet.
+        </div>
       )}
-    </ul>
+      {ticket.messages.length > 0 && (
+        <ScrollArea className="h-[40vh] md:h-[45vh] lg:flex-1">
+          {ticket.messages.map((message) => (
+            <MessageBox
+              key={message.id}
+              message={message}
+              ticketOwnerId={ticket.user.id}
+            />
+          ))}
+        </ScrollArea>
+      )}
+      <MessageInput />
+    </div>
   );
 }

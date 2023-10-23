@@ -84,18 +84,17 @@ export const ticketRouter = router({
         },
       });
 
-      let newMessage;
-      if (!!message) {
-        // Message is created.
-        newMessage = await db.message.create({
-          data: {
-            content: message,
-            userEmail: ctx.user.email,
-            ticketId: newTicket.id,
-          },
-        });
+      // Message is created.
+      const newMessage = await db.message.create({
+        data: {
+          content: message,
+          userEmail: ctx.user.email,
+          ticketId: newTicket.id,
+        },
+      });
 
-        // Log created for message.
+      // Log created for message.
+      if (!!newMessage) {
         await db.log.create({
           data: {
             ticketId: newTicket.id,
@@ -105,17 +104,12 @@ export const ticketRouter = router({
       }
 
       // Create attachment if exists.
-      if (
-        !!message &&
-        !!newMessage &&
-        !!attachmentUrl &&
-        attachmentUrl.length > 0
-      ) {
+      if (!!newMessage && !!attachmentUrl && attachmentUrl.length > 0) {
         for (const url of attachmentUrl) {
           await db.attachment.create({
             data: {
               url,
-              name: `${url.split(".").pop()?.toUpperCase()!} file`,
+              name: `${url.split(".").pop()?.toUpperCase()!}`,
               messageId: newMessage.id,
             },
           });
@@ -184,12 +178,72 @@ export const ticketRouter = router({
 
       await db.log.create({
         data: {
-          text: `Ticket assigned to ${updatedTicket.agent?.name}`,
+          text: `Ticket assigned to ${updatedTicket.agent?.name}.`,
           ticketId: updatedTicket.id,
         },
       });
 
       return updatedTicket;
+    }),
+
+  /**
+   * PRIVATE: Create message. Allows ticket owner and
+   * agents to send a message, tied to the ticket.
+   */
+  createMessage: privateProcedure
+    .input(
+      z.object({
+        content: z.string().min(1),
+        ticketId: z.string().min(1),
+        attachmentUrl: z.array(z.string()).nullish(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { content, ticketId, attachmentUrl } = input;
+
+      const existingTicket = await db.ticket.findUnique({
+        where: { id: ticketId },
+        include: { user: true },
+      });
+
+      if (!existingTicket)
+        throw new TRPCError({ code: "NOT_FOUND", message: "Ticket not found" });
+
+      if (
+        !(ctx.user.role === "ADMIN" || ctx.user.role === "AGENT") &&
+        ctx.user.email !== existingTicket.user.email
+      )
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message:
+            "Only ticket owner and helpdesk can send messages retated to the ticket",
+        });
+
+      if (!!attachmentUrl && attachmentUrl.length > 5)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Maximum 5 files allowed",
+        });
+
+      const message = await db.message.create({
+        data: {
+          content,
+          ticketId,
+          userEmail: ctx.user.email,
+        },
+      });
+
+      if (!!message) {
+        await db.log.create({
+          data: {
+            ticketId,
+            text: `${ctx.user.name} sent a message.`,
+          },
+        });
+      }
+
+      if (!!message && !!attachmentUrl && attachmentUrl.length > 0) {
+      }
     }),
 
   /**
@@ -337,7 +391,7 @@ export const ticketRouter = router({
           user: true,
           agent: true,
           messages: {
-            include: { attachments: true },
+            include: { user: true, attachments: true },
           },
         },
       });

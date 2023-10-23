@@ -34,7 +34,7 @@ export const columns: ColumnDef<TableTicketData>[] = [
   {
     accessorKey: "refId",
     header: ({ column }) => {
-      return <div className="shrink-0">REF ID</div>;
+      return <div className="select-none">REF ID</div>;
     },
     cell: ({ row }) => {
       const { id, refId } = row.original;
@@ -56,7 +56,7 @@ export const columns: ColumnDef<TableTicketData>[] = [
         <div
           role="button"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex max-w-[15rem] items-center"
+          className="flex max-w-[15rem] select-none items-center"
         >
           TICKET NAME
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -84,7 +84,7 @@ export const columns: ColumnDef<TableTicketData>[] = [
         <div
           role="button"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center whitespace-nowrap"
+          className="flex select-none items-center whitespace-nowrap"
         >
           OPEN FOR
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -100,13 +100,13 @@ export const columns: ColumnDef<TableTicketData>[] = [
   },
   // Priority
   {
-    accessorKey: "priority",
+    accessorKey: "priorityValue",
     header: ({ column }) => {
       return (
         <div
           role="button"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center"
+          className="flex select-none items-center"
         >
           PRIORITY
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -127,7 +127,7 @@ export const columns: ColumnDef<TableTicketData>[] = [
         <div
           role="button"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center"
+          className="flex select-none items-center"
         >
           STATUS
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -148,7 +148,7 @@ export const columns: ColumnDef<TableTicketData>[] = [
         <div
           role="button"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center"
+          className="flex select-none items-center"
         >
           OWNER
           <ArrowUpDown className="ml-2 h-4 w-4" />
