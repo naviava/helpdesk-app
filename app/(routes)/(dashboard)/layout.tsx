@@ -11,5 +11,9 @@ export default async function DashboardLayout({
   const user = await serverClient.user.getUserProfile();
   if (!user) return redirect("/");
 
+  if (!user.empId) {
+    await serverClient.user.createEmployeeId();
+  }
+
   return <>{children}</>;
 }

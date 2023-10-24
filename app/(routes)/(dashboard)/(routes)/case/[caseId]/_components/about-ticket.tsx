@@ -14,7 +14,7 @@ export default async function AboutTicket({ ticket }: AboutTicketProps) {
   return (
     <section className="space-y-4 p-2 lg:space-y-6">
       {/* Ticket owner and priority. */}
-      <div className="flex items-center">
+      <div className="flex items-start">
         {/* Ticket owner. */}
         <div className="flex-1">
           <h4 className="font-light text-muted-foreground">Ticket Owner</h4>
@@ -26,7 +26,7 @@ export default async function AboutTicket({ ticket }: AboutTicketProps) {
         </div>
       </div>
       {/* Category and department. */}
-      <div className="flex items-center">
+      <div className="flex items-start">
         {/* Category. */}
         <div className="flex-1">
           <h4 className="font-light text-muted-foreground">Category</h4>
@@ -76,7 +76,7 @@ export default async function AboutTicket({ ticket }: AboutTicketProps) {
         </div>
       </div>
       {/* Created and updated dates. */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between">
         <div className="flex-1">
           <h4 className="font-light text-muted-foreground">Created at</h4>
           <p>{format(new Date(ticket.createdAt), "MMM dd yyyy @ hh:mm")}</p>

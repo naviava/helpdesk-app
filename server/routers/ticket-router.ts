@@ -1,17 +1,15 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
-import { PriorityEnum } from "@/types";
+import { PriorityEnum, StatusToggleEnum } from "@/types";
 
 import { db } from "@/lib/db";
-import { generateRefId } from "@/lib/generate-ref-id";
+import { generateRefId } from "@/lib/generate-id";
 import { privateProcedure, router } from "@/server/trpc";
 
 export const ticketRouter = router({
   /**
-   * PRIVATE MUTATION: Create ticket API.
-   * Takes in title*, category, department,
-   * priority*(default: LOW), message*, attachment.
+   * CREATE TICKET PRIVATE MUTATION
    */
   createTicket: privateProcedure
     .input(
@@ -129,7 +127,7 @@ export const ticketRouter = router({
     }),
 
   /**
-   * PRIVATE MUTATION: Assign ticket API.
+   * ASSIGN TICKET PRIVATE MUTATION:
    * Only agents and admin can use this API.
    */
   assignTicket: privateProcedure
@@ -189,8 +187,9 @@ export const ticketRouter = router({
     }),
 
   /**
-   * PRIVATE MUTATION: Create message. Allows ticket owner
-   * and agents to send a message, tied to the ticket.
+   * CREATE MESSAGE PRIVATE MUTATION:
+   * Create message. Allows ticket owner and agents
+   * to send a message, tied to the ticket.
    */
   createMessage: privateProcedure
     .input(
@@ -219,6 +218,12 @@ export const ticketRouter = router({
           code: "UNAUTHORIZED",
           message:
             "Only ticket owner and helpdesk can send messages retated to the ticket",
+        });
+
+      if (existingTicket.status === "RESOLVED")
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Ticket must be re-opened in order to send a message.",
         });
 
       if (!!attachmentUrl && attachmentUrl.length > 5)
@@ -279,14 +284,78 @@ export const ticketRouter = router({
     }),
 
   /**
+   * TOGGLE STATUS PRIVATE MUTATION:
+   * Switches ticket status based on input. When status
+   * is RESOLVED, it can only receive the REOPENED status,
+   * following which any status is accepted again.
+   */
+  toggleStatus: privateProcedure
+    .input(
+      z.object({
+        ticketId: z.string().min(1),
+        newStatus: StatusToggleEnum,
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { ticketId, newStatus } = input;
+
+      const existingTicket = await db.ticket.findUnique({
+        where: { id: ticketId },
+        include: { owner: true },
+      });
+      if (!existingTicket)
+        throw new TRPCError({ code: "NOT_FOUND", message: "Ticket not found" });
+
+      if (
+        !(ctx.user.role === "ADMIN" || ctx.user.role === "AGENT") &&
+        ctx.user.email !== existingTicket.owner.email
+      )
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Only ticket owner and helpdesk can change ticket status",
+        });
+
+      let isRequestValid;
+      if (existingTicket.status !== newStatus)
+        isRequestValid =
+          existingTicket.status === "RESOLVED"
+            ? newStatus === "REOPENED"
+            : newStatus !== "REOPENED";
+
+      if (!isRequestValid)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Not a valid status change",
+        });
+
+      await db.ticket.update({
+        where: { id: ticketId },
+        data: { status: newStatus },
+      });
+
+      const statusLogMap = {
+        ON_HOLD: `${ctx.user.name} put the ticket on hold.`,
+        RESOLVED: `${ctx.user.name} closed the ticket.`,
+        REOPENED: `${ctx.user.name} re-opened the ticket.`,
+      };
+
+      await db.log.create({
+        data: {
+          ticketId,
+          text: statusLogMap[newStatus],
+        },
+      });
+
+      return true;
+    }),
+
+  /**
    * PRIVATE QUERY: Get all tickets API.
    */
   getAllTickets: privateProcedure.query(async ({ ctx }) => {
     const tickets = await db.ticket.findMany({
       orderBy: { updatedAt: "desc" },
       include: {
-        category: true,
-        department: true,
         owner: true,
         agent: true,
       },
@@ -296,6 +365,28 @@ export const ticketRouter = router({
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "No tickets matching the criteria",
+      });
+
+    return tickets;
+  }),
+
+  /**
+   * PRIVATE QUERY: Get all resolved tickets API.
+   */
+  getResolvedTickets: privateProcedure.query(async ({ ctx }) => {
+    const tickets = await db.ticket.findMany({
+      where: { status: "RESOLVED" },
+      orderBy: { updatedAt: "desc" },
+      include: {
+        owner: true,
+        agent: true,
+      },
+    });
+
+    if (!tickets)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "No resolved tickets",
       });
 
     return tickets;

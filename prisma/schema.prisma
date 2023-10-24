@@ -54,10 +54,14 @@ enum UserRole {
 model User {
   id              String          @id @default(cuid())
   name            String
+  empId           String?         @unique
   email           String          @unique
   emailVerified   DateTime?
   image           String?
   hashedPassword  String?
+  designation     String?
+  dob             DateTime?
+  phoneNumber     String?
   role            UserRole        @default(USER)
   disabled        Boolean         @default(false)
   departmentId    String?
@@ -88,6 +92,7 @@ enum TicketStatus {
   WAITING_REPLY
   ON_HOLD
   RESOLVED
+  REOPENED
 }
 
 enum TicketType {

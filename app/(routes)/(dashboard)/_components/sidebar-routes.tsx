@@ -1,6 +1,13 @@
 "use client";
 
-import { GanttChart, PlusCircle, ShieldPlus, Cuboid, User } from "lucide-react";
+import {
+  GanttChart,
+  PlusCircle,
+  ShieldPlus,
+  Cuboid,
+  User,
+  CheckCircle,
+} from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -34,6 +41,11 @@ const helpdeskRoutes = [
     icon: Cuboid,
     label: "Open Tickets",
     href: "/agent/all-tickets",
+  },
+  {
+    icon: CheckCircle,
+    label: "Resolved Tickets",
+    href: "/agent/resolved-tickets",
   },
 ];
 

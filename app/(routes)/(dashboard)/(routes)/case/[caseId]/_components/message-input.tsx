@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { z } from "zod";
@@ -28,6 +28,8 @@ const formSchema = z.object({
 export default function MessageInput({}: MessageInputProps) {
   const router = useRouter();
   const params = useParams<{ caseId: string }>();
+
+  const inputRef = useRef<HTMLDivElement>(null);
 
   const { edgestore } = useEdgeStore();
   const { onOpen: openUploadModal, urlList, clearUrlList } = useUploadModal();
@@ -62,7 +64,7 @@ export default function MessageInput({}: MessageInputProps) {
         clearUrlList();
 
         router.refresh();
-        toast.success("Ticket created");
+        toast.success("Message sent");
       },
     });
 
@@ -81,12 +83,12 @@ export default function MessageInput({}: MessageInputProps) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <div>
+                <div className="relative mt-auto">
                   <Textarea
                     disabled={isLoading}
                     autoComplete="off"
-                    placeholder="Write your message here..."
-                    className="h-[7rem] resize-none pr-[3.5rem] md:h-[10rem] md:pr-[5.5rem]"
+                    placeholder={`Write your message here...\n(Press Ctrl + Enter to send)`}
+                    className="resize-none px-12 md:px-14"
                     {...field}
                   />
                 </div>

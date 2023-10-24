@@ -4,7 +4,8 @@ import { TRPCError } from "@trpc/server";
 import { getServerSession } from "next-auth";
 
 import { db } from "@/lib/db";
-import { publicProcedure, router } from "@/server/trpc";
+import { generateEmpId } from "@/lib/generate-id";
+import { privateProcedure, publicProcedure, router } from "@/server/trpc";
 
 export const userRouter = router({
   // PUBLIC: Get user profile API.
@@ -22,6 +23,7 @@ export const userRouter = router({
     return {
       name: user.name,
       email: user.email,
+      empId: user.empId,
       image: user.image,
       role: user.role,
       disabled: user.disabled,
@@ -76,4 +78,30 @@ export const userRouter = router({
 
       return true;
     }),
+
+  createEmployeeId: privateProcedure.mutation(async ({ ctx }) => {
+    if (!!ctx.user.empId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "This user already has an Employee ID",
+      });
+    }
+
+    let empId = generateEmpId();
+    let existingEmpId = await db.user.findUnique({
+      where: { empId },
+    });
+
+    while (!!existingEmpId) {
+      empId = generateEmpId();
+      existingEmpId = await db.user.findUnique({
+        where: { empId },
+      });
+    }
+
+    await db.user.update({
+      where: { email: ctx.user.email },
+      data: { empId },
+    });
+  }),
 });

@@ -36,19 +36,21 @@ export default function MessageBox({
             <div className="w-full">
               <div className="flex items-start justify-between space-y-1">
                 {/* Sender name. */}
-                <div className="flex items-center gap-x-1">
+                <div className="flex items-center">
                   <h5 className="text-xs text-muted-foreground md:text-sm">
                     From:
                   </h5>
-                  <span className="md:text-lg">{message.sender.name}</span>
+                  <span className="ml-1 line-clamp-1 md:text-lg">
+                    {message.sender.name}
+                  </span>
                   {isSentByTicketOwner && (
-                    <span className="text-xs text-muted-foreground md:text-sm">
+                    <div className="ml-1 shrink-0 text-xs text-muted-foreground md:text-sm">
                       (Ticket owner)
-                    </span>
+                    </div>
                   )}
                 </div>
                 {/* Opened duration. */}
-                <span className="shrink-0 text-xs italic text-muted-foreground">
+                <span className="ml-2 shrink-0 text-xs italic text-muted-foreground">
                   {openedDuration === "now"
                     ? openedDuration
                     : `${openedDuration} ago`}
@@ -79,11 +81,13 @@ export default function MessageBox({
           </AccordionTrigger>
           <AccordionContent>
             <Separator />
-            <div className="my-2 space-y-1 pl-6">
+            <div className="my-2 max-w-[88vw] grow-0 space-y-1 pl-6 lg:max-w-[60vw] xl:max-w-[40vw]">
               <h5 className="text-xs text-muted-foreground md:text-sm">
                 Message:
               </h5>
-              <p className="text-sm xl:text-base">{message.content}</p>
+              <p className="break-words text-sm xl:text-base">
+                {message.content}
+              </p>
             </div>
             {message.attachments.length > 0 && (
               <>

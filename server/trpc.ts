@@ -31,6 +31,7 @@ const isAuthenticated = middleware(async (opts) => {
       user: {
         name: user.name,
         email: user.email,
+        empId: user.empId,
         image: user.image,
         role: user.role,
         disabled: user.disabled,
@@ -62,6 +63,7 @@ const isAdmin = middleware(async (opts) => {
       user: {
         name: user.name,
         email: user.email,
+        empId: user.empId,
         image: user.image,
         role: user.role,
         disabled: user.disabled,
@@ -99,6 +101,7 @@ const isManager = middleware(async (opts) => {
       user: {
         name: user.name,
         email: user.email,
+        empId: user.empId,
         image: user.image,
         role: user.role,
         disabled: user.disabled,
