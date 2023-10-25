@@ -1,12 +1,15 @@
 "use client";
 
+import { useMemo, useState } from "react";
+
 import { v4 as uuid } from "uuid";
-import { Mail } from "lucide-react";
+import { FcAbout, FcFolder } from "react-icons/fc";
+
 import StatusToggleButton from "./status-toggle-button";
-import { serverClient } from "@/app/_trpc/server-client";
+import TicketActions from "./ticket-actions";
 import ActionItem from "./action-item";
-import { FcFolder } from "react-icons/fc";
-import { useMemo } from "react";
+
+import { serverClient } from "@/app/_trpc/server-client";
 
 interface ActionsBarProps {
   ticket: Awaited<ReturnType<(typeof serverClient)["ticket"]["getTicketById"]>>;
@@ -37,15 +40,9 @@ export default function ActionsBar({ ticket }: ActionsBarProps) {
       },
       {
         id: uuid(),
-        icon: Mail,
-        label: "Notes",
+        icon: FcAbout,
+        label: "Technical Notes",
         href: `/case/${ticket.id}/notes`,
-      },
-      {
-        id: uuid(),
-        icon: Mail,
-        label: "Options",
-        href: `/case/${ticket.id}/assign`,
       },
     ],
     [ticket.id],
@@ -53,7 +50,7 @@ export default function ActionsBar({ ticket }: ActionsBarProps) {
 
   return (
     <section className="flex items-center justify-between pl-2">
-      <ul className="flex items-center gap-x-2 md:gap-x-10">
+      <ul className="flex items-center gap-x-10">
         {actionItems.map((item) => (
           <ActionItem
             key={item.id}
@@ -62,6 +59,9 @@ export default function ActionsBar({ ticket }: ActionsBarProps) {
             href={item.href}
           />
         ))}
+        <li className="hidden lg:block">
+          <TicketActions />
+        </li>
       </ul>
       <div className="space-x-2">
         {!isResolved && !isOnHold && (
