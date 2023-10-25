@@ -1,6 +1,6 @@
-import { serverClient } from "@/app/_trpc/server-client";
 import PageHeading from "@/components/page-heading";
-import UserRoutes from "./_components/user-routes";
+import { serverClient } from "@/app/_trpc/server-client";
+import { redirect } from "next/navigation";
 
 interface UserLayoutProps {
   children: React.ReactNode;
@@ -15,9 +15,6 @@ export default async function UserLayout({ children }: UserLayoutProps) {
         title={`Welcome, ${user?.name}`}
         tagline="All data here is related to your account."
       />
-      <div className="mt-10">
-        <UserRoutes user={user} />
-      </div>
       <>{children}</>
     </div>
   );

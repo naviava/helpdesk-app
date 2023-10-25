@@ -22,12 +22,16 @@ export const userRouter = router({
 
     return {
       name: user.name,
-      email: user.email,
       empId: user.empId,
+      email: user.email,
       image: user.image,
+      designation: user.designation,
+      dob: user.dob,
       role: user.role,
-      disabled: user.disabled,
+      departmentId: user.departmentId,
       department: user.department?.name,
+      phoneNumber: user.phoneNumber,
+      disabled: user.disabled,
     };
   }),
 
@@ -79,6 +83,7 @@ export const userRouter = router({
       return true;
     }),
 
+  // PRIVATE: Create Employee ID.
   createEmployeeId: privateProcedure.mutation(async ({ ctx }) => {
     if (!!ctx.user.empId) {
       throw new TRPCError({
@@ -104,4 +109,65 @@ export const userRouter = router({
       data: { empId },
     });
   }),
+
+  // PRIVATE: Set Profile Image.
+  setProfileImage: privateProcedure
+    .input(
+      z.object({
+        url: z.string().min(1),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { url } = input;
+
+      await db.user.update({
+        where: { email: ctx.user.email },
+        data: { image: url },
+      });
+
+      return true;
+    }),
+
+  // Edit personal Information.
+  editPersonalInfo: privateProcedure
+    .input(
+      z.object({
+        name: z.string().min(1, { message: "Name cannot be empty" }),
+        designation: z.string().nullish(),
+        departmentId: z.string().nullish(),
+        dob: z.date().nullish(),
+        phoneNumber: z.string().nullish(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { name, departmentId, designation, dob, phoneNumber } = input;
+      console.log(typeof dob);
+
+      let dataQuery: any = {
+        name,
+        designation,
+        phoneNumber,
+      };
+
+      if (!!dob) {
+        dataQuery = {
+          ...dataQuery,
+          dob: !!dob && new Date(dob),
+        };
+      }
+
+      if (!!departmentId) {
+        dataQuery = {
+          ...dataQuery,
+          department: { connect: { id: departmentId } },
+        };
+      }
+
+      await db.user.update({
+        where: { email: ctx.user.email },
+        data: dataQuery,
+      });
+
+      return true;
+    }),
 });

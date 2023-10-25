@@ -1,8 +1,5 @@
-import PageHeading from "@/components/page-heading";
-import { serverClient } from "@/app/_trpc/server-client";
+import { redirect } from "next/navigation";
 
-interface UserPageProps {}
-
-export default async function UserPage({}: UserPageProps) {
-  return <>UserPage</>;
+export default function UserPage() {
+  return redirect("/user/profile");
 }

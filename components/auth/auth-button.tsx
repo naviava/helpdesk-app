@@ -31,7 +31,7 @@ export default function AuthButton({ user }: AuthButtonProps) {
       {
         label: "My Profile",
         Icon: UserCircle2,
-        action: () => router.push("/user"),
+        action: () => router.push("/user/profile"),
       },
       {
         label: "Manage account",

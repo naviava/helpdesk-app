@@ -50,12 +50,13 @@ export function Combobox({
       </PopoverTrigger>
       <PopoverContent className="w-full p-0" align="start">
         <Command>
-          <CommandInput placeholder="Search options..." />
+          <CommandInput placeholder="Search options..." className="z-[999]" />
           <CommandEmpty>No option found.</CommandEmpty>
-          <CommandGroup>
+          <CommandGroup className="z-[999]">
             {options?.map((option) => (
               <CommandItem
                 key={option.value}
+                className="z-[999]"
                 onSelect={() => {
                   onChange(option.value === value ? "" : option.value);
                   setOpen(false);
