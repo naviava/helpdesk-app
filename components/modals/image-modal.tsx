@@ -20,23 +20,11 @@ export default function ImageModal() {
     "h-[350px] w-[350px] md:h-[650px] md:w-[650px] lg:h-[800px] lg:w-[800px]";
 
   return (
-    // <Dialog open={isOpen} onOpenChange={onClose}>
-    //   <DialogContent className="h-[800px] max-w-none border-none bg-transparent p-0 md:w-auto">
-    //     <div className="relative h-[800px] w-[800px] rounded-lg">
-    //       <Image
-    //         fill
-    //         src={url}
-    //         alt="Profile image"
-    //         className="rounded-lg object-cover"
-    //       />
-    //     </div>
-    //   </DialogContent>
-    // </Dialog>
     <Modal
       isOpen={isOpen}
       onOpenChange={onClose}
       className={cn(
-        "max-w-none -translate-y-[90%] border-none bg-transparent md:translate-y-0",
+        "max-w-none -translate-y-[90%] border-none bg-transparent shadow-none md:translate-y-0",
         dimensions,
       )}
     >

@@ -28,9 +28,9 @@ export default function PersonalInfoField({
         <Icon className="mr-2 h-5 w-5 md:h-6 md:w-6" />
         <h4 className="text-xs md:text-sm">{label}</h4>
       </div>
-      <div className="mt-1 line-clamp-1 break-words pl-7 text-sm font-medium md:pl-8 md:text-base">
+      <div className="mt-1 line-clamp-2 pl-7 text-sm font-medium md:pl-8 md:text-base">
         {isLoading ? (
-          <Skeleton className="mt-1 h-5 w-[70%] rounded-md" />
+          <Skeleton className="mt-1 h-4 w-[70%] rounded-md" />
         ) : (
           <>
             {!!displayString ? (

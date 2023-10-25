@@ -2,7 +2,7 @@
 
 import { Users2 } from "lucide-react";
 
-import { PersonalInfoFormType } from "@/types";
+import { PersonalInfoFormType } from "../personal-info";
 
 import { Combobox } from "@/components/combobox";
 import {
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 
 interface EditDepartmentProps {
-  form: PersonalInfoFormType;
+  form: PersonalInfoFormType | any | undefined;
   options: { label: string; value: string }[] | undefined;
   disabled?: boolean;
 }

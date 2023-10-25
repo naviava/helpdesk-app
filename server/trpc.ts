@@ -1,4 +1,3 @@
-import superjson from "superjson";
 import { getServerSession } from "next-auth";
 import { TRPCError, initTRPC } from "@trpc/server";
 
@@ -43,6 +42,7 @@ const isAuthenticated = middleware(async (opts) => {
   });
 });
 
+// Admin only middleware.
 const isAdmin = middleware(async (opts) => {
   const session = await getServerSession();
 

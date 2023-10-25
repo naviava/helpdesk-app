@@ -4,6 +4,8 @@ import TicketHeader from "./_components/ticket-header";
 import TicketDetails from "./_components/ticket-details";
 import { serverClient } from "@/app/_trpc/server-client";
 import { redirect } from "next/navigation";
+import StatusToggleButton from "./_components/ticket-actions/status-toggle-button";
+import ActionsBar from "./_components/ticket-actions/actions-bar";
 
 interface CaseIdLayoutProps {
   children: React.ReactNode;
@@ -15,7 +17,6 @@ export default async function CaseIdLayout({
   params,
 }: CaseIdLayoutProps) {
   const ticket = await serverClient.ticket.getTicketById({ id: params.caseId });
-
   if (!ticket) return redirect("/");
 
   return (
@@ -31,7 +32,12 @@ export default async function CaseIdLayout({
           <TicketDetails ticket={ticket} />
         </div>
       </div>
-      <div className="flex-1">{children}</div>
+      <div className="flex-1">
+        <div className="flex h-full flex-col gap-y-4 px-2 py-4">
+          <ActionsBar ticket={ticket} />
+          {children}
+        </div>
+      </div>
     </div>
   );
 }

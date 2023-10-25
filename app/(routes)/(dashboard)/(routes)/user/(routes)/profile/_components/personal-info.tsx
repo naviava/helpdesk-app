@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import * as z from "zod";
@@ -49,20 +49,20 @@ const formSchema = z.object({
       /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}|^$/,
       "Enter the required date format",
     ),
-  phoneNumber: z.string().nullish(),
+  phoneNumber: z
+    .string()
+    .regex(
+      /^(?![- ])(?!.*[- ]$)(?!.*[- ]{2,})[0-9 -]*$/,
+      "ex. 413-203... or 413 203...",
+    ),
 });
+
+export type PersonalInfoSchema = typeof formSchema;
 
 export default function PersonalInfo() {
   const router = useRouter();
-
-  const [initialData, setInitialData] = useState<{
-    name: string | undefined;
-    designation: string | null | undefined;
-    departmentId: string | null | undefined;
-    dob: string | undefined;
-    phoneNumber: string | null | undefined;
-  }>();
   const [isEditing, setIsEditing] = useState(false);
+  const cancelButtonRef = useRef<HTMLButtonElement>(null);
 
   const getuserProfile = trpc.user.getUserProfile.useQuery();
   const { data: departments } = trpc.list.getDepartments.useQuery();
@@ -77,15 +77,15 @@ export default function PersonalInfo() {
     () => [
       {
         id: uuid(),
-        icon: User,
-        label: "Name",
-        value: user?.name,
+        icon: Fingerprint,
+        label: "Employee ID",
+        value: user?.empId,
       },
       {
         id: uuid(),
-        icon: Box,
-        label: "Designation",
-        value: user?.designation,
+        icon: User,
+        label: "Name",
+        value: user?.name,
       },
       {
         id: uuid(),
@@ -95,9 +95,9 @@ export default function PersonalInfo() {
       },
       {
         id: uuid(),
-        icon: Fingerprint,
-        label: "Employee ID",
-        value: user?.empId,
+        icon: Box,
+        label: "Designation",
+        value: user?.designation,
       },
       {
         id: uuid(),
@@ -168,6 +168,17 @@ export default function PersonalInfo() {
     [handleEditProfile],
   );
 
+  useEffect(() => {
+    function handleKeyDown(evt: KeyboardEvent) {
+      if (evt.key === "Escape") {
+        cancelButtonRef.current?.click();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  });
+
   return (
     <section className="relative p-6 md:p-8 lg:pl-10">
       <h2 className="text-lg font-medium lg:text-xl">Personal Info</h2>
@@ -213,6 +224,7 @@ export default function PersonalInfo() {
               Save
             </Button>
             <Button
+              ref={cancelButtonRef}
               type="button"
               variant="ghost"
               onClick={() => setIsEditing(false)}
@@ -224,26 +236,24 @@ export default function PersonalInfo() {
           </form>
         </Form>
       )}
-      <div
-        role="button"
-        onClick={() => setIsEditing((prev) => !prev)}
-        className="absolute right-5 top-5"
-      >
-        <TooltipProvider>
-          <Tooltip delayDuration={200}>
-            <TooltipTrigger>
-              {!isEditing ? (
-                <Edit className="text-slate-600" />
-              ) : (
-                <X className="text-slate-600" />
-              )}
-            </TooltipTrigger>
-            <TooltipContent side="left">
-              <p>{!isEditing ? "Edit information" : "Cancel"}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
+      {!isFetching && (
+        <div
+          role="button"
+          onClick={() => setIsEditing((prev) => !prev)}
+          className="absolute right-5 top-5"
+        >
+          <TooltipProvider>
+            <Tooltip delayDuration={200}>
+              <TooltipTrigger className="text-slate-600 transition hover:text-slate-600/80">
+                {!isEditing ? <Edit /> : <X />}
+              </TooltipTrigger>
+              <TooltipContent side="left">
+                <p>{!isEditing ? "Edit information" : "Cancel"}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      )}
     </section>
   );
 }

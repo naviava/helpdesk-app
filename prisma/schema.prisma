@@ -62,6 +62,7 @@ model User {
   designation     String?
   dob             String?
   phoneNumber     String?
+  bio             String?         @db.Text
   role            UserRole        @default(USER)
   disabled        Boolean         @default(false)
   departmentId    String?
@@ -128,6 +129,7 @@ model Ticket {
 model Message {
   id          String       @id @default(cuid())
   content     String       @db.Text
+  isRead      Boolean      @default(false)
   senderEmail String
   sender      User         @relation(fields: [senderEmail], references: [email])
   ticketId    String

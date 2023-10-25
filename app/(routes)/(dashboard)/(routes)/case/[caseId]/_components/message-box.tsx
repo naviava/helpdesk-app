@@ -29,7 +29,7 @@ export default function MessageBox({
   const openedDuration = calculateOpenedDuration(message.createdAt);
 
   return (
-    <Accordion type="single" collapsible className="mb-2 md:mb-3 lg:mb-6">
+    <Accordion type="single" collapsible className="mb-6 md:mb-8 lg:mb-6">
       <AccordionItem value={message.id}>
         <section className="space-y-2 rounded-sm bg-white pl-2 pr-6 shadow-md">
           <AccordionTrigger>
@@ -43,11 +43,6 @@ export default function MessageBox({
                   <span className="ml-1 line-clamp-1 md:text-lg">
                     {message.sender.name}
                   </span>
-                  {isSentByTicketOwner && (
-                    <div className="ml-1 shrink-0 text-xs text-muted-foreground md:text-sm">
-                      (Ticket owner)
-                    </div>
-                  )}
                 </div>
                 {/* Opened duration. */}
                 <span className="ml-2 shrink-0 text-xs italic text-muted-foreground">
@@ -85,7 +80,7 @@ export default function MessageBox({
               <h5 className="text-xs text-muted-foreground md:text-sm">
                 Message:
               </h5>
-              <p className="break-words text-sm xl:text-base">
+              <p className="whitespace-pre-wrap break-words text-sm leading-[1.75rem] md:text-base md:leading-[2rem]">
                 {message.content}
               </p>
             </div>

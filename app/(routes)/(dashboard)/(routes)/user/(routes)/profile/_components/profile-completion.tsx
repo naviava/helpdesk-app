@@ -3,12 +3,13 @@
 import { useMemo } from "react";
 
 import { v4 as uuid } from "uuid";
+import { Skeleton } from "@nextui-org/react";
 import { CheckCircle, X } from "lucide-react";
+
 import "react-circular-progressbar/dist/styles.css";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 
 import { trpc } from "@/app/_trpc/client";
-import { Skeleton } from "@nextui-org/react";
 
 export default function ProfileCompletion() {
   const { data: user, isFetching } = trpc.user.getUserProfile.useQuery();
@@ -16,10 +17,12 @@ export default function ProfileCompletion() {
   const requiredFields = useMemo(
     () => [
       user?.name,
+      user?.image,
       user?.designation,
       user?.department,
       user?.dob,
       user?.phoneNumber,
+      user?.bio,
     ],
     [user],
   );
@@ -33,16 +36,18 @@ export default function ProfileCompletion() {
     [requiredFields],
   );
   const completionPercent = useMemo(
-    () => (completedFields / totalFields) * 100,
+    () => Math.floor((completedFields / totalFields) * 100),
     [completedFields, totalFields],
   );
 
   const listItems = useMemo(
     () => [
       { id: uuid(), label: "Name", value: user?.name },
+      { id: uuid(), label: "Set an avatar", value: user?.image },
+      { id: uuid(), label: "Write your bio", value: user?.bio },
       { id: uuid(), label: "Designation", value: user?.designation },
       { id: uuid(), label: "Department", value: user?.department },
-      { id: uuid(), label: "Date of Birth", value: user?.dob },
+      { id: uuid(), label: "Birthday", value: user?.dob },
       { id: uuid(), label: "Phone Number", value: user?.phoneNumber },
     ],
     [user],
@@ -52,19 +57,22 @@ export default function ProfileCompletion() {
     <>
       {isFetching ? (
         <section className="space-y-10 py-10">
-          <div>
-            <Skeleton className="mx-auto h-6 w-[80%] rounded-md" />
-          </div>
+          <h2 className="text-center text-xl font-medium">
+            Complete your profile
+          </h2>
           <div>
             <Skeleton className="mx-auto h-[12rem] w-[12rem] rounded-full" />
           </div>
-          <div className="space-y-6">
-            <Skeleton className="mx-auto h-6 w-[10rem] rounded-md" />
-            <Skeleton className="mx-auto h-6 w-[10rem] rounded-md" />
-            <Skeleton className="mx-auto h-6 w-[10rem] rounded-md" />
-            <Skeleton className="mx-auto h-6 w-[10rem] rounded-md" />
-            <Skeleton className="mx-auto h-6 w-[10rem] rounded-md" />
-          </div>
+          <ul className="ml-10 space-y-6">
+            {Array(7)
+              .fill(null)
+              .map((_, idx) => (
+                <li key={idx} className="flex items-center">
+                  <Skeleton className="mr-4 h-6 w-6 rounded-full" />
+                  <Skeleton className="h-6 w-[7rem] rounded-full" />
+                </li>
+              ))}
+          </ul>
         </section>
       ) : (
         <section className="space-y-10 py-10">
@@ -75,7 +83,7 @@ export default function ProfileCompletion() {
             <CircularProgressbar
               value={completionPercent}
               maxValue={100}
-              text={`${completionPercent}%`}
+              text={completionPercent !== 100 ? `${completionPercent}%` : "👍"}
               styles={buildStyles({
                 textColor: "#031230",
                 pathColor: "#1DC14E",

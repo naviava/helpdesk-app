@@ -13,12 +13,14 @@ interface TicketStatusToggleButtonProps {
   ticketId: string;
   newStatus: "ON_HOLD" | "RESOLVED" | "REOPENED";
   text: string;
+  className?: string;
 }
 
 export default function StatusToggleButton({
   ticketId,
   newStatus,
   text,
+  className,
 }: TicketStatusToggleButtonProps) {
   const router = useRouter();
 
@@ -52,6 +54,7 @@ export default function StatusToggleButton({
         size="sm"
         disabled={isLoading}
         onClick={handleStatusChange}
+        className={className}
       >
         {text}
       </Button>

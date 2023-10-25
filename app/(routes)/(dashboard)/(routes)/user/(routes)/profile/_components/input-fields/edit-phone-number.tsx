@@ -2,7 +2,7 @@
 
 import { Phone } from "lucide-react";
 
-import { PersonalInfoFormType } from "@/types";
+import { PersonalInfoFormType } from "../personal-info";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 
 interface EditPhoneNumberProps {
-  form: PersonalInfoFormType;
+  form: PersonalInfoFormType | any | undefined;
   disabled?: boolean;
 }
 

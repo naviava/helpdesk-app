@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { z } from "zod";
@@ -28,8 +28,6 @@ const formSchema = z.object({
 export default function MessageInput({}: MessageInputProps) {
   const router = useRouter();
   const params = useParams<{ caseId: string }>();
-
-  const inputRef = useRef<HTMLDivElement>(null);
 
   const { edgestore } = useEdgeStore();
   const { onOpen: openUploadModal, urlList, clearUrlList } = useUploadModal();

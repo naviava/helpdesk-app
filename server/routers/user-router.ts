@@ -27,10 +27,11 @@ export const userRouter = router({
       image: user.image,
       designation: user.designation,
       dob: user.dob,
-      role: user.role,
+      phoneNumber: user.phoneNumber,
+      bio: user.bio,
       departmentId: user.departmentId,
       department: user.department?.name,
-      phoneNumber: user.phoneNumber,
+      role: user.role,
       disabled: user.disabled,
     };
   }),
@@ -138,7 +139,12 @@ export const userRouter = router({
         dob: z
           .string()
           .regex(/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}|^$/),
-        phoneNumber: z.string().nullish(),
+        phoneNumber: z
+          .string()
+          .regex(
+            /^(?![- ])(?!.*[- ]$)(?!.*[- ]{2,})[0-9 -]*$/,
+            "ex. 413-203... or 413 203...",
+          ),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -166,5 +172,19 @@ export const userRouter = router({
       });
 
       return true;
+    }),
+
+  // Edit Bio.
+  setBio: privateProcedure
+    .input(
+      z.object({
+        bio: z.string().min(20),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await db.user.update({
+        where: { email: ctx.user.email },
+        data: { bio: input.bio },
+      });
     }),
 });
