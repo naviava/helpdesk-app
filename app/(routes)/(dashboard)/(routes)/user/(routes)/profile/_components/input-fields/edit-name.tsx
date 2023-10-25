@@ -1,5 +1,7 @@
 "use client";
 
+import { User } from "lucide-react";
+
 import { PersonalInfoFormType } from "@/types";
 
 import { Input } from "@/components/ui/input";
@@ -24,7 +26,10 @@ export default function EditName({ form, disabled = false }: EditNameProps) {
       name="name"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Name</FormLabel>
+          <FormLabel className="flex items-center text-muted-foreground">
+            <User className="mr-2 h-5 w-5" />
+            Name
+          </FormLabel>
           <FormControl>
             <Input
               placeholder="Enter your name"

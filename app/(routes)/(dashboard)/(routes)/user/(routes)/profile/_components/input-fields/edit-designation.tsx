@@ -1,11 +1,12 @@
 "use client";
 
+import { Box } from "lucide-react";
+
 import { PersonalInfoFormType } from "@/types";
 
 import { Input } from "@/components/ui/input";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -27,7 +28,10 @@ export default function EditDesignation({
       name="designation"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Designation</FormLabel>
+          <FormLabel className="flex items-center text-muted-foreground">
+            <Box className="mr-2 h-5 w-5" />
+            Designation
+          </FormLabel>
           <FormControl>
             <Input
               placeholder="Your job role"

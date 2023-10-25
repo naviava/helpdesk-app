@@ -104,9 +104,6 @@ dependencies:
   react:
     specifier: ^18
     version: 18.2.0
-  react-day-picker:
-    specifier: ^8.9.1
-    version: 8.9.1(date-fns@2.30.0)(react@18.2.0)
   react-dom:
     specifier: ^18
     version: 18.2.0(react@18.2.0)
@@ -151,9 +148,6 @@ devDependencies:
   '@types/react':
     specifier: ^18
     version: 18.2.25
-  '@types/react-day-picker':
-    specifier: ^5.3.0
-    version: 5.3.0(date-fns@2.30.0)(react@18.2.0)
   '@types/react-dom':
     specifier: ^18
     version: 18.2.11
@@ -4951,16 +4945,6 @@ packages:
   /@types/prop-types@15.7.8:
     resolution: {integrity: sha512-kMpQpfZKSCBqltAJwskgePRaYRFukDkm1oItcAbC3gNELR20XIBcN9VRgg4+m8DKsTfkWeA4m4Imp4DDuWy7FQ==}
 
-  /@types/react-day-picker@5.3.0(date-fns@2.30.0)(react@18.2.0):
-    resolution: {integrity: sha512-iMMXQjwTH8uxPTW3WYP6ZufZBSMFFEScGIztENtKfvukefrojmX/WCUNPrimC9ys1ll5nnM0VGaHolYLAbcEtw==}
-    deprecated: This is a stub types definition for react-day-picker (https://github.com/gpbl/react-day-picker). react-day-picker provides its own type definitions, so you don't need @types/react-day-picker installed!
-    dependencies:
-      react-day-picker: 8.9.1(date-fns@2.30.0)(react@18.2.0)
-    transitivePeerDependencies:
-      - date-fns
-      - react
-    dev: true
-
   /@types/react-dom@18.2.11:
     resolution: {integrity: sha512-zq6Dy0EiCuF9pWFW6I6k6W2LdpUixLE4P6XjXU1QHLfak3GPACQfLwEuHzY5pOYa4hzj1d0GxX/P141aFjZsyg==}
     dependencies:
@@ -5533,6 +5517,7 @@ packages:
     engines: {node: '>=0.11'}
     dependencies:
       '@babel/runtime': 7.23.1
+    dev: false
 
   /debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -7312,15 +7297,6 @@ packages:
   /queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
-  /react-day-picker@8.9.1(date-fns@2.30.0)(react@18.2.0):
-    resolution: {integrity: sha512-W0SPApKIsYq+XCtfGeMYDoU0KbsG3wfkYtlw8l+vZp6KoBXGOlhzBUp4tNx1XiwiOZwhfdGOlj7NGSCKGSlg5Q==}
-    peerDependencies:
-      date-fns: ^2.28.0
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      date-fns: 2.30.0
-      react: 18.2.0
-
   /react-dom@18.2.0(react@18.2.0):
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
@@ -7491,6 +7467,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
+    dev: false
 
   /read-cache@1.0.0:
     resolution: {integrity: sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA==}

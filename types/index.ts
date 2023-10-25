@@ -31,9 +31,9 @@ export type TicketFormType = UseFormReturn<
 export type PersonalInfoFormType = UseFormReturn<
   {
     name: string;
+    dob: string;
     designation?: string | null | undefined;
     departmentId?: string | null | undefined;
-    dob?: Date | null | undefined;
     phoneNumber?: string | null | undefined;
   },
   any,

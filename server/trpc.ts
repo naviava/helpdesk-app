@@ -1,6 +1,8 @@
-import { db } from "@/lib/db";
-import { TRPCError, initTRPC } from "@trpc/server";
+import superjson from "superjson";
 import { getServerSession } from "next-auth";
+import { TRPCError, initTRPC } from "@trpc/server";
+
+import { db } from "@/lib/db";
 
 const t = initTRPC.create();
 const middleware = t.middleware;

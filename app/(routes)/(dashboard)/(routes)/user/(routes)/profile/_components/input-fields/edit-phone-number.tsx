@@ -1,5 +1,7 @@
 "use client";
 
+import { Phone } from "lucide-react";
+
 import { PersonalInfoFormType } from "@/types";
 
 import { Input } from "@/components/ui/input";
@@ -26,7 +28,10 @@ export default function EditPhoneNumber({
       name="phoneNumber"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Phone Number</FormLabel>
+          <FormLabel className="flex items-center text-muted-foreground">
+            <Phone className="mr-2 h-5 w-5" />
+            Phone Number
+          </FormLabel>
           <FormControl>
             <Input
               placeholder="Contact no."

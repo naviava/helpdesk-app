@@ -135,31 +135,28 @@ export const userRouter = router({
         name: z.string().min(1, { message: "Name cannot be empty" }),
         designation: z.string().nullish(),
         departmentId: z.string().nullish(),
-        dob: z.date().nullish(),
+        dob: z
+          .string()
+          .regex(/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}|^$/),
         phoneNumber: z.string().nullish(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       const { name, departmentId, designation, dob, phoneNumber } = input;
-      console.log(typeof dob);
 
       let dataQuery: any = {
         name,
         designation,
         phoneNumber,
+        dob,
       };
-
-      if (!!dob) {
-        dataQuery = {
-          ...dataQuery,
-          dob: !!dob && new Date(dob),
-        };
-      }
 
       if (!!departmentId) {
         dataQuery = {
           ...dataQuery,
-          department: { connect: { id: departmentId } },
+          department: {
+            connect: { id: departmentId },
+          },
         };
       }
 

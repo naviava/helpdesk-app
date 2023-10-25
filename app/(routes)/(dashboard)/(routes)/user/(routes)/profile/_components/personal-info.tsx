@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import * as z from "zod";
@@ -19,8 +19,6 @@ import {
   Users2,
   X,
 } from "lucide-react";
-
-import { PersonalInfoFormType } from "@/types";
 
 import { useForm } from "react-hook-form";
 
@@ -45,18 +43,35 @@ const formSchema = z.object({
   name: z.string().min(1, { message: "Name cannot be empty" }),
   designation: z.string().nullish(),
   departmentId: z.string().nullish(),
-  dob: z.date().nullish(),
+  dob: z
+    .string()
+    .regex(
+      /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}|^$/,
+      "Enter the required date format",
+    ),
   phoneNumber: z.string().nullish(),
 });
 
-export default function PersonalInformation() {
+export default function PersonalInfo() {
   const router = useRouter();
+
+  const [initialData, setInitialData] = useState<{
+    name: string | undefined;
+    designation: string | null | undefined;
+    departmentId: string | null | undefined;
+    dob: string | undefined;
+    phoneNumber: string | null | undefined;
+  }>();
   const [isEditing, setIsEditing] = useState(false);
 
-  const { data: departments } = trpc.list.getDepartments.useQuery();
   const getuserProfile = trpc.user.getUserProfile.useQuery();
+  const { data: departments } = trpc.list.getDepartments.useQuery();
 
-  const { data: user, isFetching } = getuserProfile;
+  const {
+    data: user,
+    isFetching,
+    isFetched,
+  } = useMemo(() => getuserProfile, [getuserProfile]);
 
   const fields = useMemo(
     () => [
@@ -115,17 +130,6 @@ export default function PersonalInformation() {
     [user],
   );
 
-  const initialData = useMemo(
-    () => ({
-      name: user?.name,
-      designation: user?.designation,
-      departmentId: user?.departmentId,
-      dob: !!user?.dob ? new Date(user?.dob) : undefined,
-      phoneNumber: user?.phoneNumber,
-    }),
-    [user],
-  );
-
   const { mutate: handleEditProfile, isLoading } =
     trpc.user.editPersonalInfo.useMutation({
       onError: ({ message }) => toast.error(message),
@@ -138,17 +142,29 @@ export default function PersonalInformation() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData || {
+    defaultValues: {
       name: "",
       designation: "",
       departmentId: "",
-      dob: !!user?.dob ? new Date(user?.dob) : null,
+      dob: "",
       phoneNumber: "",
     },
   });
 
+  useEffect(() => {
+    if (isFetched) {
+      form.setValue("name", user?.name || "");
+      form.setValue("designation", user?.designation || "");
+      form.setValue("departmentId", user?.departmentId || "");
+      form.setValue("dob", user?.dob || "");
+      form.setValue("phoneNumber", user?.phoneNumber || "");
+    }
+  }, [isFetched, form, user]);
+
   const onSubmit = useCallback(
-    (values: z.infer<typeof formSchema>) => handleEditProfile(values),
+    (values: z.infer<typeof formSchema>) => {
+      handleEditProfile(values);
+    },
     [handleEditProfile],
   );
 
@@ -174,7 +190,7 @@ export default function PersonalInformation() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="mx-2 mt-6 space-y-8"
           >
-            <div className="grid grid-cols-1 gap-y-8 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-y-8 md:grid-cols-2 md:gap-x-10 xl:grid-cols-3">
               <EditName form={form} disabled={isLoading} />
               <EditDesignation form={form} disabled={isLoading} />
               <EditDepartment
@@ -188,10 +204,21 @@ export default function PersonalInformation() {
               <EditDob form={form} disabled={isLoading} />
               <EditPhoneNumber form={form} disabled={isLoading} />
             </div>
-            <Button type="submit" variant="theme">
+            <Button
+              type="submit"
+              variant="theme"
+              disabled={isLoading}
+              className="min-w-[6rem]"
+            >
               Save
             </Button>
-            <Button type="button" variant="ghost">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setIsEditing(false)}
+              disabled={isLoading}
+              className="min-w-[6rem]"
+            >
               Cancel
             </Button>
           </form>

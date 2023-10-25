@@ -1,3 +1,7 @@
+"use client";
+
+import { Users2 } from "lucide-react";
+
 import { PersonalInfoFormType } from "@/types";
 
 import { Combobox } from "@/components/combobox";
@@ -27,7 +31,10 @@ export default function EditDepartment({
         name="departmentId"
         render={({ field }) => (
           <FormItem className="flex flex-col">
-            <FormLabel>Department</FormLabel>
+            <FormLabel className="flex items-center text-muted-foreground">
+              <Users2 className="mr-2 h-5 w-5" />
+              Department
+            </FormLabel>
             <FormControl>
               <Combobox options={options} {...field} disabled={disabled} />
             </FormControl>
