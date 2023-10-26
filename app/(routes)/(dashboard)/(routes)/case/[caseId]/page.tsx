@@ -1,10 +1,9 @@
 import { redirect } from "next/navigation";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
 import MessageInput from "./_components/message-input";
-import MessageBox from "./_components/message-box";
 
 import { serverClient } from "@/app/_trpc/server-client";
+import MessagesArea from "./_components/messages-area";
 
 interface CaseIdPageProps {
   params: { caseId: string };
@@ -21,19 +20,8 @@ export default async function CaseIdPage({ params }: CaseIdPageProps) {
           No messages yet.
         </div>
       )}
-      {ticket.messages.length > 0 && (
-        <ScrollArea className="flex h-[75vh] flex-col">
-          {ticket.messages.map((message) => (
-            <MessageBox
-              key={message.id}
-              message={message}
-              ticketOwnerId={ticket.owner.id}
-            />
-          ))}
-        </ScrollArea>
-      )}
+      {ticket.messages.length > 0 && <MessagesArea ticket={ticket} />}
       <MessageInput />
-      {/* Children ends here */}
     </>
   );
 }

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import {} from "dompurify";
 import { TRPCError } from "@trpc/server";
 
 import { PriorityEnum, StatusToggleEnum } from "@/types";
@@ -50,7 +51,7 @@ export const ticketRouter = router({
       }
 
       const newTicketData: any = {
-        title,
+        title: title,
         refId,
         priority,
         ownerEmail: ctx.user.email,
@@ -105,7 +106,7 @@ export const ticketRouter = router({
         for (const url of attachmentUrl) {
           await db.attachment.create({
             data: {
-              url,
+              url: url,
               name: `${url.split(".").pop()?.toUpperCase()!}`,
               messageId: newMessage.id,
             },
@@ -234,7 +235,7 @@ export const ticketRouter = router({
 
       const message = await db.message.create({
         data: {
-          content,
+          content: content,
           ticketId,
           senderEmail: ctx.user.email,
         },
@@ -264,7 +265,7 @@ export const ticketRouter = router({
         for (const url of attachmentUrl) {
           await db.attachment.create({
             data: {
-              url,
+              url: url,
               name: `${url.split(".").pop()?.toUpperCase() ?? "UNKNOWN"}`,
               messageId: message.id,
             },

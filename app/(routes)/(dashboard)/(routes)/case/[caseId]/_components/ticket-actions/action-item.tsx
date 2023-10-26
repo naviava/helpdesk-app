@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { motion } from "framer-motion";
@@ -26,6 +26,11 @@ export default function ActionItem({
 
   const isActive = useMemo(() => pathname === href, [pathname, href]);
 
+  useEffect(() => {
+    setTopDiv(label);
+    setBottomDiv(label);
+  }, [label]);
+
   return (
     <li
       role="button"
@@ -34,10 +39,10 @@ export default function ActionItem({
         setBottomDiv(label);
         router.push(href);
       }}
-      className={cn("relative flex items-center justify-center p-1 md:p-2")}
+      className="relative flex items-center justify-center p-1"
     >
-      <Icon className="mr-2 h-10 w-10 md:h-7 md:w-7 md:translate-x-0" />
-      <span className={cn("hidden md:block")}>{label}</span>
+      <Icon className="mr-2 h-5 w-5 md:h-7 md:w-7 md:translate-x-0" />
+      <span className="text-xs sm:text-sm lg:text-base">{label}</span>
       {isActive && activeSection === label && (
         <>
           <motion.div

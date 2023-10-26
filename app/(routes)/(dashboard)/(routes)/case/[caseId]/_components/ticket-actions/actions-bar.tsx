@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 
 import { v4 as uuid } from "uuid";
-import { FcAbout, FcFolder } from "react-icons/fc";
+import { FcAbout, FcFolder, FcSettings } from "react-icons/fc";
 
 import StatusToggleButton from "./status-toggle-button";
 import TicketActions from "./ticket-actions";
@@ -44,40 +44,26 @@ export default function ActionsBar({ ticket }: ActionsBarProps) {
         label: "Technical Notes",
         href: `/case/${ticket.id}/notes`,
       },
+      {
+        id: uuid(),
+        icon: FcSettings,
+        label: "Options",
+        href: `/case/${ticket.id}/options`,
+      },
     ],
     [ticket.id],
   );
 
   return (
-    <section className="flex items-center justify-between pl-2">
-      <ul className="flex items-center gap-x-10">
-        {actionItems.map((item) => (
-          <ActionItem
-            key={item.id}
-            icon={item.icon}
-            label={item.label}
-            href={item.href}
-          />
-        ))}
-        <li className="hidden lg:block">
-          <TicketActions />
-        </li>
-      </ul>
-      <div className="space-x-2">
-        {!isResolved && !isOnHold && (
-          <StatusToggleButton
-            ticketId={ticket.id}
-            newStatus="ON_HOLD"
-            text="Hold"
-          />
-        )}
-        <StatusToggleButton
-          ticketId={ticket.id}
-          newStatus={newStatus}
-          text={statusToggleText}
-          className="bg-emerald-500 text-white"
+    <ul className="flex items-center justify-between gap-x-2">
+      {actionItems.map((item) => (
+        <ActionItem
+          key={item.id}
+          icon={item.icon}
+          label={item.label}
+          href={item.href}
         />
-      </div>
-    </section>
+      ))}
+    </ul>
   );
 }

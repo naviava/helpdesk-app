@@ -26,7 +26,7 @@ const userRoutes = [
   },
   {
     icon: GanttChart,
-    label: "My Tickets",
+    label: "Open Tickets",
     href: "/user/tickets",
   },
 ];
@@ -72,7 +72,7 @@ export default function SidebarRoutes({}: SidebarRoutesProps) {
         )}
         {/* User Routes */}
         <section>
-          <SidebarPanelHeader text="Manage Tickets" />
+          <SidebarPanelHeader text="My Tickets" />
           <Separator />
           {userRoutes.map((route) => (
             <SidebarItem
