@@ -18,8 +18,6 @@ interface TableTicketData {
   title: string;
   priority: Priority;
   status: TicketStatus;
-  category?: string;
-  department?: string;
   owner: string;
   ownerEmail?: string;
   agent?: string;

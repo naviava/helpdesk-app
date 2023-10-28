@@ -2,6 +2,8 @@
 
 import { User } from "lucide-react";
 
+import { PersonalInfoSchemaType } from "../personal-info";
+
 import { Input } from "@/components/ui/input";
 import {
   FormControl,
@@ -11,10 +13,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { PersonalInfoFormType } from "../personal-info";
 
 interface EditNameProps {
-  form: PersonalInfoFormType | any | undefined;
+  form: PersonalInfoSchemaType | any | undefined;
   disabled?: boolean;
 }
 

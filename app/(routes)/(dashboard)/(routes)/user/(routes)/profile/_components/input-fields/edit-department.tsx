@@ -2,7 +2,7 @@
 
 import { Users2 } from "lucide-react";
 
-import { PersonalInfoFormType } from "../personal-info";
+import { PersonalInfoSchemaType } from "../personal-info";
 
 import { Combobox } from "@/components/combobox";
 import {
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 
 interface EditDepartmentProps {
-  form: PersonalInfoFormType | any | undefined;
+  form: PersonalInfoSchemaType | any | undefined;
   options: { label: string; value: string }[] | undefined;
   disabled?: boolean;
 }

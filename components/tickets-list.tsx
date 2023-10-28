@@ -31,8 +31,6 @@ export default async function TicketsList({ data }: TicketsListProps) {
     return {
       ...ticket,
       priorityValue: priorityMap[ticket.priority],
-      category: ticket.category?.name,
-      department: ticket.department?.name,
       owner: ticket.owner.name,
       ownerEmail: ticket.owner.email,
       agent: ticket.agent?.name,

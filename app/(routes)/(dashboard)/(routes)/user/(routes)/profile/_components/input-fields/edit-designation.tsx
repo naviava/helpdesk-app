@@ -2,7 +2,7 @@
 
 import { Box } from "lucide-react";
 
-import { PersonalInfoFormType } from "../personal-info";
+import { PersonalInfoSchemaType } from "../personal-info";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 
 interface EditDesignationProps {
-  form: PersonalInfoFormType | any | undefined;
+  form: PersonalInfoSchemaType | any | undefined;
   disabled?: boolean;
 }
 

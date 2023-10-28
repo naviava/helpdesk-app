@@ -57,7 +57,7 @@ const formSchema = z.object({
     ),
 });
 
-export type PersonalInfoSchema = typeof formSchema;
+export type PersonalInfoSchemaType = typeof formSchema;
 
 export default function PersonalInfo() {
   const router = useRouter();
