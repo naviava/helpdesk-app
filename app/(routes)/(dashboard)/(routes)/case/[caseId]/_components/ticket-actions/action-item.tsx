@@ -5,24 +5,33 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { motion } from "framer-motion";
 
-import { cn } from "@/lib/utils";
+import { trpc } from "@/app/_trpc/client";
 
 interface ActionItemProps {
   icon: any;
   label: string;
   href: string;
+  helpdeskOnly?: boolean;
 }
 
 export default function ActionItem({
   icon: Icon,
   label,
   href,
+  helpdeskOnly,
 }: ActionItemProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [activeSection, setTopDiv] = useState("");
   const [_, setBottomDiv] = useState("");
+  const [topDiv, setTopDiv] = useState("");
+
+  const { data: user } = trpc.user.getUserProfile.useQuery();
+
+  const isHelpdesk = useMemo(
+    () => user?.role === "ADMIN" || user?.role === "AGENT",
+    [user?.role],
+  );
 
   const isActive = useMemo(() => pathname === href, [pathname, href]);
 
@@ -30,6 +39,8 @@ export default function ActionItem({
     setTopDiv(label);
     setBottomDiv(label);
   }, [label]);
+
+  if (helpdeskOnly && !isHelpdesk) return null;
 
   return (
     <li
@@ -43,7 +54,7 @@ export default function ActionItem({
     >
       <Icon className="mr-2 h-5 w-5 md:h-7 md:w-7 md:translate-x-0" />
       <span className="text-xs sm:text-sm lg:text-base">{label}</span>
-      {isActive && activeSection === label && (
+      {isActive && topDiv === label && (
         <>
           <motion.div
             layoutId="activeSection"

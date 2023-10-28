@@ -2,11 +2,12 @@ import { redirect } from "next/navigation";
 
 import PriorityTag from "@/components/priority-tag";
 import ActionsBar from "./_components/ticket-actions/actions-bar";
+import StatusToggleButton from "./_components/ticket-actions/status-toggle-button";
 import TicketDetails from "./_components/ticket-details";
 import TicketHeader from "./_components/ticket-header";
 
+import { cn } from "@/lib/utils";
 import { serverClient } from "@/app/_trpc/server-client";
-import StatusToggleButton from "./_components/ticket-actions/status-toggle-button";
 
 interface CaseIdLayoutProps {
   children: React.ReactNode;
@@ -20,10 +21,15 @@ export default async function CaseIdLayout({
   const ticket = await serverClient.ticket.getTicketById({ id: params.caseId });
   if (!ticket) return redirect("/");
 
+  const user = await serverClient.user.getUserProfile();
+  if (user?.role === "USER" || user?.role === "MANAGER") {
+    if (user.email !== ticket.ownerEmail) return redirect("/");
+  }
+
   const isResolved = ticket.status === "RESOLVED";
   const isOnHold = ticket.status === "ON_HOLD";
   const newStatus = !isResolved ? "RESOLVED" : "REOPENED";
-  const statusToggleText = !isResolved ? "Close" : "Re-open";
+  const statusToggleText = !isResolved ? "Mark Resolved" : "Re-open";
 
   return (
     <div className="h-full lg:flex">
@@ -42,7 +48,12 @@ export default async function CaseIdLayout({
               ticketId={ticket.id}
               newStatus={newStatus}
               text={statusToggleText}
-              className="bg-emerald-500 text-white"
+              className={cn(
+                "text-white hover:text-white",
+                isResolved
+                  ? "bg-rose-500 hover:bg-rose-600"
+                  : "bg-emerald-500 hover:bg-emerald-600",
+              )}
             />
           </div>
         </div>

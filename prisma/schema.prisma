@@ -142,31 +142,34 @@ model Message {
   @@index([senderEmail, ticketId])
 }
 
-model Attachment {
-  id        String  @id @default(cuid())
-  name      String
-  url       String  @db.Text
-  messageId String
-  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([messageId])
-}
-
 model TechnicalNote {
-  id         String @id @default(cuid())
-  content    String @db.Text
-  ownerEmail String
-  owner      User   @relation(fields: [ownerEmail], references: [email])
-  ticketId   String
-  ticket     Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  id          String       @id @default(cuid())
+  content     String       @db.Text
+  ownerEmail  String
+  owner       User         @relation(fields: [ownerEmail], references: [email])
+  ticketId    String
+  ticket      Ticket       @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  attachments Attachment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([ownerEmail, ticketId])
+}
+
+model Attachment {
+  id              String         @id @default(cuid())
+  name            String
+  url             String         @db.Text
+  messageId       String?
+  message         Message?       @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  technicalNoteId String?
+  technicalNote   TechnicalNote? @relation(fields: [technicalNoteId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([messageId, technicalNoteId])
 }
 
 model Log {

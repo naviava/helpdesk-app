@@ -13,7 +13,7 @@ import { useUploadModal } from "@/hooks/use-upload-modal";
 
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import MessageButtons from "./message-buttons";
+import MessageButtons from "../../../_components/message-buttons";
 
 import { trpc } from "@/app/_trpc/client";
 
@@ -52,8 +52,8 @@ export default function MessageInput({}: MessageInputProps) {
   /**
    * TODO: Mutation to create message.
    */
-  const { mutate: createMessage, isLoading } =
-    trpc.ticket.createMessage.useMutation({
+  const { mutate: createTechNote, isLoading } =
+    trpc.ticket.createTechNote.useMutation({
       onError: ({ message }) => toast.error(message),
       onSuccess: async () => {
         form.reset();
@@ -62,14 +62,14 @@ export default function MessageInput({}: MessageInputProps) {
         clearUrlList();
 
         router.refresh();
-        toast.success("Message sent");
+        toast.success("Note added");
       },
     });
 
   const onSubmit = useCallback(
     (values: z.infer<typeof formSchema>) =>
-      createMessage({ ...values, attachmentUrl: urlList }),
-    [createMessage, urlList],
+      createTechNote({ ...values, attachmentUrl: urlList }),
+    [createTechNote, urlList],
   );
 
   return (

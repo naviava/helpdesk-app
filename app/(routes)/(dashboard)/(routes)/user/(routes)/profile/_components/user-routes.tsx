@@ -4,9 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 export default function UserRoutes() {
   const pathname = usePathname();
+  const [activeSection, setActiveSection] = useState("");
 
   const routes = [
     {
@@ -21,18 +24,26 @@ export default function UserRoutes() {
     },
   ];
 
+  useEffect(() => {
+    setActiveSection(pathname);
+  }, [pathname]);
+
   return (
     <ul className="border-b-2">
       <div className="ml-6 flex items-center gap-x-10">
         {routes.map((route) => (
           <li
             key={route.href}
-            className={cn(
-              "pb-1",
-              route.isActive && "border-b-2 border-sky-500 text-sky-600",
-            )}
+            className={cn("relative pb-1", route.isActive && "text-sky-600")}
           >
             <Link href={route.href}>{route.label}</Link>
+            {activeSection === route.href && (
+              <motion.div
+                layoutId="activeSection"
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                className="absolute inset-x-0 bottom-0 hidden h-[0.2rem] rounded-full bg-black bg-sky-500/50 md:block"
+              />
+            )}
           </li>
         ))}
       </div>

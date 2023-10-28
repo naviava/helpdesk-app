@@ -285,6 +285,89 @@ export const ticketRouter = router({
     }),
 
   /**
+   * CREATE MESSAGE PRIVATE MUTATION:
+   * Create message. Allows ticket owner and agents
+   * to send a message, tied to the ticket.
+   */
+  createTechNote: privateProcedure
+    .input(
+      z.object({
+        content: z.string().min(1),
+        ticketId: z.string().min(1),
+        attachmentUrl: z.array(z.string()).nullish(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { content, ticketId, attachmentUrl } = input;
+
+      const existingTicket = await db.ticket.findUnique({
+        where: { id: ticketId },
+        include: { owner: true },
+      });
+
+      if (!existingTicket)
+        throw new TRPCError({ code: "NOT_FOUND", message: "Ticket not found" });
+
+      if (!(ctx.user.role === "ADMIN" || ctx.user.role === "AGENT"))
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message:
+            "Only helpdesk can create technical notes retated to the ticket",
+        });
+
+      if (existingTicket.status === "RESOLVED")
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Ticket must be re-opened in order to send a message",
+        });
+
+      if (!!attachmentUrl && attachmentUrl.length > 5)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Maximum 5 files allowed",
+        });
+
+      const techNote = await db.technicalNote.create({
+        data: {
+          content: content,
+          ticketId,
+          ownerEmail: ctx.user.email,
+        },
+      });
+
+      if (!!techNote) {
+        await db.log.create({
+          data: {
+            ticketId,
+            text: `${ctx.user.name} added a technical note.`,
+          },
+        });
+
+        if (!!attachmentUrl && attachmentUrl.length > 0) {
+          for (const url of attachmentUrl) {
+            await db.attachment.create({
+              data: {
+                url: url,
+                name: `${url.split(".").pop()?.toUpperCase() ?? "UNKNOWN"}`,
+                technicalNoteId: techNote.id,
+              },
+            });
+          }
+
+          // Create a single log for all attachments.
+          await db.log.create({
+            data: {
+              ticketId,
+              text: `${ctx.user.name} added ${attachmentUrl.length} ${
+                attachmentUrl.length === 1 ? "file." : "files."
+              } attached to the technical note.`,
+            },
+          });
+        }
+      }
+    }),
+
+  /**
    * TOGGLE STATUS PRIVATE MUTATION:
    * Switches ticket status based on input. When status
    * is RESOLVED, it can only receive the REOPENED status,
@@ -499,13 +582,13 @@ export const ticketRouter = router({
       }),
     )
     .query(async ({ ctx, input }) => {
-      let dataQuery: any = { id: input.id };
+      // let dataQuery: any = { id: input.id };
 
-      if (ctx.user.role === "USER" || ctx.user.role === "MANAGER")
-        dataQuery = { id: input.id, ownerEmail: ctx.user.email };
+      // if (ctx.user.role === "USER" || ctx.user.role === "MANAGER")
+      //   dataQuery = { id: input.id };
 
       const ticket = await db.ticket.findUnique({
-        where: dataQuery,
+        where: { id: input.id },
         include: {
           category: true,
           department: true,
@@ -513,6 +596,10 @@ export const ticketRouter = router({
           agent: true,
           messages: {
             include: { sender: true, attachments: true },
+            orderBy: { createdAt: "desc" },
+          },
+          technicalNotes: {
+            include: { owner: true, attachments: true },
             orderBy: { createdAt: "desc" },
           },
         },

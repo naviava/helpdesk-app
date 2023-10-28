@@ -37,3 +37,4 @@ next-env.d.ts
 
 # custom ignores
 /scripts
+/app/test

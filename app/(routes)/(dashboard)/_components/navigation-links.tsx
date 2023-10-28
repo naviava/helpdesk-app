@@ -9,6 +9,9 @@ import {
 } from "lucide-react";
 
 import NavigationItem from "./navigation-item";
+import { useParams } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { useMemo } from "react";
 
 const userRoutes = [
   {
@@ -41,11 +44,27 @@ const helpdeskRoutes = [
   },
 ];
 
-function NavigationItems() {
+interface NavigationItemsProps {
+  isHelpdesk: boolean;
+}
+
+function NavigationItems({ isHelpdesk }: NavigationItemsProps) {
+  const params = useParams();
+  const isTicketPage = useMemo(() => !!params?.caseId, [params?.caseId]);
+
   return (
-    <div className="hidden items-center gap-x-20 md:flex lg:absolute lg:gap-x-14 lg:pl-[20rem] xl:pl-[30rem]">
+    <div
+      className={cn(
+        "hidden items-center gap-x-20 md:flex lg:absolute lg:gap-x-14",
+        isTicketPage
+          ? "lg:pl-[20rem] xl:pl-[30rem]"
+          : "lg:absolute lg:left-[50%] lg:-translate-x-1/2",
+      )}
+    >
       <NavigationItem title="My Tickets" routes={userRoutes} />
-      <NavigationItem title="Helpdesk" routes={helpdeskRoutes} />
+      {isHelpdesk && (
+        <NavigationItem title="Helpdesk" routes={helpdeskRoutes} />
+      )}
     </div>
   );
 }

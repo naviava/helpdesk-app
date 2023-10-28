@@ -3,20 +3,20 @@
 import { motion } from "framer-motion";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
-import MessageBox from "./message-box";
+import TechNoteBox from "./tech-note-box";
 
 import { serverClient } from "@/app/_trpc/server-client";
 
-interface MessagesAreaProps {
+interface TechNotesAreaProps {
   ticket: Awaited<ReturnType<typeof serverClient.ticket.getTicketById>>;
 }
 
-function MessagesArea({ ticket }: MessagesAreaProps) {
+function TechNotesArea({ ticket }: TechNotesAreaProps) {
   return (
     <div className="relative max-h-[70vh] flex-1 md:max-h-[50vh] lg:max-h-[80vh] xl:max-h-[70vh]">
       <ScrollArea className="flex max-h-[70vh] flex-col md:max-h-[50vh] lg:max-h-[80vh] xl:max-h-[70vh]">
-        {ticket.messages.map((message) => (
-          <MessageBox key={message.id} message={message} />
+        {ticket.technicalNotes.map((note) => (
+          <TechNoteBox key={note.id} note={note} />
         ))}
       </ScrollArea>
       <motion.div
@@ -30,4 +30,4 @@ function MessagesArea({ ticket }: MessagesAreaProps) {
   );
 }
 
-export default MessagesArea;
+export default TechNotesArea;

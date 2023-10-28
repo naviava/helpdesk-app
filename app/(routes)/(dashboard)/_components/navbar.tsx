@@ -8,15 +8,19 @@ import NavigationLinks from "./navigation-links";
 import MobileSidebar from "./mobile-sidebar";
 
 import { serverClient } from "@/app/_trpc/server-client";
+import Logo from "@/components/logo";
 
 export default async function Navbar() {
   const user = await serverClient.user.getUserProfile();
+  const isHelpdesk = user?.role === "ADMIN" || user?.role === "AGENT";
 
   return (
     <nav className="relative flex h-full items-center justify-between border-b bg-slate-100 p-4 shadow-sm dark:bg-slate-900">
-      <h1 className="hidden text-2xl lg:block">LOGO</h1>
+      <div className="hidden lg:block">
+        <Logo />
+      </div>
       <MobileSidebar />
-      <NavigationLinks />
+      <NavigationLinks isHelpdesk={isHelpdesk} />
       {/* Auth Routes. */}
       <div className="flex items-center gap-x-4">
         {/* Admin dashboard link. */}

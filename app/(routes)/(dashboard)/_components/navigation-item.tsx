@@ -25,22 +25,9 @@ interface NavigationItemProps {
 }
 
 function NavigationItem({ title, routes }: NavigationItemProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref);
-
-  const [rotate, setRotate] = useState(0);
-
-  useEffect(() => {
-    if (isInView) {
-      setRotate(180);
-    } else {
-      setRotate(0);
-    }
-  }, [isInView]);
-
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <div className="group relative flex items-center text-lg hover:cursor-pointer">
           {title}
           <div>
@@ -56,12 +43,12 @@ function NavigationItem({ title, routes }: NavigationItemProps) {
           >
             <Link
               href={route.href}
-              className="flex items-center gap-x-2 px-4 py-2 text-lg dark:hover:bg-slate-700"
+              className="flex items-center px-2 py-2 dark:hover:bg-slate-700"
             >
               <IconBadge
                 icon={route.icon}
                 size="lg"
-                className="ml-2 text-muted-foreground"
+                className="mr-2 text-muted-foreground"
               />
               {route.label}
             </Link>

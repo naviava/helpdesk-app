@@ -5,8 +5,6 @@ import { useMemo, useState } from "react";
 import { v4 as uuid } from "uuid";
 import { FcAbout, FcFolder, FcSettings } from "react-icons/fc";
 
-import StatusToggleButton from "./status-toggle-button";
-import TicketActions from "./ticket-actions";
 import ActionItem from "./action-item";
 
 import { serverClient } from "@/app/_trpc/server-client";
@@ -43,6 +41,7 @@ export default function ActionsBar({ ticket }: ActionsBarProps) {
         icon: FcAbout,
         label: "Technical Notes",
         href: `/case/${ticket.id}/notes`,
+        helpdeskOnly: true,
       },
       {
         id: uuid(),
@@ -55,13 +54,14 @@ export default function ActionsBar({ ticket }: ActionsBarProps) {
   );
 
   return (
-    <ul className="flex items-center justify-between gap-x-2">
+    <ul className="flex items-center justify-around gap-x-2">
       {actionItems.map((item) => (
         <ActionItem
           key={item.id}
           icon={item.icon}
           label={item.label}
           href={item.href}
+          helpdeskOnly={item.helpdeskOnly}
         />
       ))}
     </ul>

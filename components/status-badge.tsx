@@ -20,7 +20,7 @@ export const statusMap = {
   ON_HOLD: { colors: "bg-yellow-500/20 text-yellow-600", text: "On hold" },
   RESOLVED: { colors: "bg-emerald-500/20 text-emerald-600", text: "Resolved" },
   REOPENED: {
-    colors: "bg-red-600/20 text-red-600 border-red-600",
+    colors: "bg-yellow-300 text-rose-700 border-2 border-red-700",
     text: "Re-opened",
   },
 };

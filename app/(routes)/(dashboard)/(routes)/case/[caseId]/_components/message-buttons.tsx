@@ -2,12 +2,10 @@
 
 import { useEffect, useRef } from "react";
 
-import { File, Mail, Paperclip, Send } from "lucide-react";
+import { File, Paperclip, Send } from "lucide-react";
 
 import { useUploadModal } from "@/hooks/use-upload-modal";
 
-import { Button } from "@/components/ui/button";
-import IconBadge from "@/components/icon-badge";
 import {
   Tooltip,
   TooltipContent,

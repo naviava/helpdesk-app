@@ -33,11 +33,11 @@ export default function AuthButton({ user }: AuthButtonProps) {
         Icon: UserCircle2,
         action: () => router.push("/user/profile"),
       },
-      {
-        label: "Manage account",
-        Icon: Settings,
-        action: () => {},
-      },
+      // {
+      //   label: "Manage account",
+      //   Icon: Settings,
+      //   action: () => {},
+      // },
       {
         label: "Sign out",
         Icon: LogOut,
@@ -64,14 +64,16 @@ export default function AuthButton({ user }: AuthButtonProps) {
       <DropdownMenuContent align="end" className="dark:bg-slate-800">
         <DropdownMenuLabel>
           <div className="flex gap-x-4 pt-2">
-            <Avatar className="h-14 w-14">
+            <Avatar className="">
               <AvatarImage src={user?.image || ""} alt="User profile image" />
-              <AvatarFallback className="bg-slate-300 text-3xl font-medium dark:bg-slate-700">
+              <AvatarFallback className="bg-slate-300 text-2xl font-medium dark:bg-slate-700">
                 {user?.name?.[0].toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div>
-              <div className="space-y-1 text-xl">{user?.name}</div>
+              <h2 className="line-clamp-2 max-w-[6rem] space-y-1 md:max-w-[8rem]">
+                {user?.name}
+              </h2>
               <p className="text-xs font-normal text-muted-foreground">
                 {user?.email}
               </p>

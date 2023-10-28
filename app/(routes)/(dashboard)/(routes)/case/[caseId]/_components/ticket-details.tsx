@@ -17,7 +17,7 @@ export default function TicketDetails({ ticket }: TicketDetailsProps) {
   return (
     <Accordion type="multiple">
       {/* About ticket. */}
-      <AccordionItem value="item-1">
+      <AccordionItem value="about-ticket">
         <AccordionTrigger className="text-sm">
           About this ticket
         </AccordionTrigger>
@@ -26,7 +26,7 @@ export default function TicketDetails({ ticket }: TicketDetailsProps) {
         </AccordionContent>
       </AccordionItem>
       {/* Ticket logs. */}
-      <AccordionItem value="item-2">
+      <AccordionItem value="ticket-logs">
         <AccordionTrigger className="text-sm">Ticket Logs</AccordionTrigger>
         <AccordionContent className="font-normal">
           <TicketLogs ticketId={ticket.id} />

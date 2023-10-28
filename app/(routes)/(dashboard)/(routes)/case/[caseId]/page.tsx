@@ -15,13 +15,13 @@ export default async function CaseIdPage({ params }: CaseIdPageProps) {
 
   return (
     <>
+      <MessageInput />
       {ticket.messages.length === 0 && (
         <div className="flex flex-1 flex-col items-center justify-center">
           No messages yet.
         </div>
       )}
       {ticket.messages.length > 0 && <MessagesArea ticket={ticket} />}
-      <MessageInput />
     </>
   );
 }
