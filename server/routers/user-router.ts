@@ -188,4 +188,21 @@ export const userRouter = router({
         data: { bio: sanitize(input.bio) },
       });
     }),
+
+  // Get helpdesk agents list.
+  getAgents: privateProcedure.query(async () => {
+    const agents = await db.user.findMany({
+      where: {
+        role: {
+          in: ["ADMIN", "AGENT"],
+        },
+      },
+      select: {
+        name: true,
+        email: true,
+      },
+    });
+
+    return agents;
+  }),
 });

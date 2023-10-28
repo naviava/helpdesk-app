@@ -8,13 +8,5 @@ interface UserLayoutProps {
 export default async function UserLayout({ children }: UserLayoutProps) {
   const user = await serverClient.user.getUserProfile();
 
-  return (
-    <div className="h-full px-2 py-6 md:p-6">
-      <PageHeading
-        title={`Welcome, ${user?.name}`}
-        tagline="Customize your profile and stand out."
-      />
-      <>{children}</>
-    </div>
-  );
+  return <div className="h-full px-2 py-6 md:p-6">{children}</div>;
 }

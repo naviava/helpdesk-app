@@ -30,7 +30,7 @@ export default function UserRoutes() {
 
   return (
     <ul className="border-b-2">
-      <div className="ml-6 flex items-center gap-x-10">
+      <div className="flex items-center justify-around md:justify-start md:gap-x-10">
         {routes.map((route) => (
           <li
             key={route.href}
