@@ -63,7 +63,7 @@ model User {
   dob             String?
   phoneNumber     String?
   bio             String?         @db.Text
-  role            UserRole        @default(USER)
+  role            UserRole        @default(AGENT)
   disabled        Boolean         @default(false)
   departmentId    String?
   department      Department?     @relation(fields: [departmentId], references: [id])
