@@ -9,8 +9,36 @@ import { cn } from "@/lib/utils";
 const font = Lexend_Deca({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Helpdesk Management",
+  applicationName: "Helpdesk Management",
+  title: "Helpdesk",
   description: "ITSM at your fingertips.",
+  manifest: "/manifest.json",
+  themeColor: "#FFFFFF",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Helpdesk Management",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Helpdesk",
+    title: {
+      default: "Helpdesk Management",
+      template: "Helpdesk Management",
+    },
+    description: "ITSM at your fingertips.",
+  },
+  twitter: {
+    card: "summary",
+    title: {
+      default: "Helpdesk Management",
+      template: "Helpdesk Management",
+    },
+    description: "ITSM at your fingertips.",
+  },
 };
 
 export default async function RootLayout({
