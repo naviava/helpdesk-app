@@ -2,8 +2,6 @@ import { Toaster } from "sonner";
 import { getServerSession } from "next-auth";
 
 import ModalProvider from "./modal-provider";
-import NextUIProvider from "./next-ui-provider";
-import { ThemeProvider } from "./theme-provider";
 import SessionProvider from "./session-provider";
 import { EdgeStoreProvider } from "@/lib/edgestore";
 import TRPCProvider from "@/app/_trpc/trpc-provider";

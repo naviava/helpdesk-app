@@ -1,6 +1,5 @@
 import Logo from "@/components/logo";
 import SignInScreen from "@/components/auth/sign-in-screen";
-import { ThemeToggleButton } from "@/components/theme-toggle-button";
 
 export default function SignInClient() {
   return (
