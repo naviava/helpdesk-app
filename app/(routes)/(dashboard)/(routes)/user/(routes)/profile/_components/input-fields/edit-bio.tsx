@@ -91,7 +91,7 @@ export default function EditBio({ setIsEditing }: EditBioProps) {
               <FormControl>
                 <Textarea
                   disabled={isLoading}
-                  placeholder={`Ready to add your own touch?\nPress Ctrl + Enter to send...`}
+                  placeholder={`Ready to add your own touch?\nPress Ctrl + Enter to save...`}
                   className="h-[20rem] resize-none whitespace-pre-wrap text-sm leading-[1.75rem] md:h-[20rem] md:text-base md:leading-[2rem]"
                   {...field}
                 />

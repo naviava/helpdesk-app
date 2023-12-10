@@ -37,13 +37,16 @@ export default async function CaseIdLayout({
         <div className="flex items-center justify-between px-4 pb-2 pt-3">
           <PriorityTag priority={ticket.priority} />
           <div className="space-x-2">
-            {!isResolved && !isOnHold && (
-              <StatusToggleButton
-                ticketId={ticket.id}
-                newStatus="ON_HOLD"
-                text="Hold"
-              />
-            )}
+            {!isResolved &&
+              !isOnHold &&
+              !!ticket.agentEmail &&
+              (user?.role === "AGENT" || user?.role === "ADMIN") && (
+                <StatusToggleButton
+                  ticketId={ticket.id}
+                  newStatus="ON_HOLD"
+                  text="Hold"
+                />
+              )}
             <StatusToggleButton
               ticketId={ticket.id}
               newStatus={newStatus}

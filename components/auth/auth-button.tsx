@@ -22,6 +22,12 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import IconBadge from "@/components/icon-badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { trpc } from "@/app/_trpc/client";
@@ -72,7 +78,7 @@ export default function AuthButton({ initialData }: AuthButtonProps) {
         utils.user.invalidate();
         setTimeout(() => {
           window.location.reload();
-        }, 1000);
+        }, 2000);
       },
     });
 
@@ -93,7 +99,7 @@ export default function AuthButton({ initialData }: AuthButtonProps) {
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[15rem]">
+      <DropdownMenuContent align="end" className="min-w-[15rem]">
         <DropdownMenuLabel>
           <div className="flex gap-x-4 pt-2">
             <Avatar>
@@ -124,15 +130,24 @@ export default function AuthButton({ initialData }: AuthButtonProps) {
           </DropdownMenuItem>
         ))}
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => handleToggleRole()}>
-          <span className="mr-1 text-xs text-muted-foreground text-neutral-400">
-            Current role:
-          </span>
-          <span className="text-xs capitalize text-neutral-600">
-            {user?.role.toLowerCase()}
-          </span>
-          <RefreshCcw className="ml-auto h-4 w-4 text-neutral-400" />
-        </DropdownMenuItem>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenuItem onClick={() => handleToggleRole()}>
+                <span className="mr-1 text-xs text-muted-foreground text-neutral-400">
+                  Current role:
+                </span>
+                <span className="text-xs capitalize text-neutral-600">
+                  {user?.role.toLowerCase()}
+                </span>
+                <RefreshCcw className="ml-auto h-4 w-4 text-neutral-400" />
+              </DropdownMenuItem>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" align="end">
+              <p>Click to swap role</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -144,7 +144,7 @@ export const ticketRouter = router({
       if (ctx.user.role === "USER" || ctx.user.role === "MANAGER")
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "Unauthorized action",
+          message: "You are not authorized to assign tickets.",
         });
 
       const existingTicket = await db.ticket.findUnique({

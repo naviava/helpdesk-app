@@ -67,14 +67,14 @@ export default function AgentSelector() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mx-10 mt-4 space-y-6"
+        className="mx-10 mt-4 w-[20rem] space-y-6"
       >
         <FormField
           control={form.control}
           name="agentEmail"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Assign to</FormLabel>
+              <FormLabel>Assigned to</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger disabled={isLoading || isFetching}>
@@ -89,9 +89,9 @@ export default function AgentSelector() {
                   ))}
                 </SelectContent>
               </Select>
-              <FormDescription>
-                You can manage email addresses in your{" "}
-                <Link href="/examples/forms">email settings</Link>.
+              <FormDescription className="max-w-[20rem] text-xs text-muted-foreground">
+                This agent is the primary contact. However, any agent can work
+                on your ticket.
               </FormDescription>
               <FormMessage />
             </FormItem>
