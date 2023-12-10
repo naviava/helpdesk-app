@@ -16,8 +16,6 @@ import SidebarItem from "./sidebar-item";
 
 import { trpc } from "@/app/_trpc/client";
 
-interface SidebarRoutesProps {}
-
 const userRoutes = [
   {
     icon: PlusCircle,
@@ -49,7 +47,11 @@ const helpdeskRoutes = [
   },
 ];
 
-export default function SidebarRoutes({}: SidebarRoutesProps) {
+interface Props {
+  closeSidebar: () => void;
+}
+
+export default function SidebarRoutes({ closeSidebar }: Props) {
   const { data: user } = trpc.user.getUserProfile.useQuery();
 
   return (
@@ -66,6 +68,7 @@ export default function SidebarRoutes({}: SidebarRoutesProps) {
                 icon={route.icon}
                 label={route.label}
                 href={route.href}
+                closeSidebar={closeSidebar}
               />
             ))}
           </section>
@@ -80,6 +83,7 @@ export default function SidebarRoutes({}: SidebarRoutesProps) {
               icon={route.icon}
               label={route.label}
               href={route.href}
+              closeSidebar={closeSidebar}
             />
           ))}
         </section>

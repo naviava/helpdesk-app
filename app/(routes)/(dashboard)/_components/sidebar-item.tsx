@@ -14,15 +14,24 @@ interface SidebarItemProps {
   icon: LucideIcon;
   label: string;
   href: string;
+  closeSidebar: () => void;
 }
 
-export default function SidebarItem({ icon, label, href }: SidebarItemProps) {
+export default function SidebarItem({
+  icon,
+  label,
+  href,
+  closeSidebar,
+}: SidebarItemProps) {
   const router = useRouter();
   const pathname = usePathname();
 
   const isActive = useMemo(() => pathname.startsWith(href), [pathname, href]);
 
-  const handleClick = useCallback(() => router.push(href), [router, href]);
+  const handleClick = useCallback(() => {
+    router.push(href);
+    closeSidebar();
+  }, [router, href, closeSidebar]);
 
   return (
     <>
