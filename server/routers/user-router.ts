@@ -204,4 +204,20 @@ export const userRouter = router({
 
     return agents;
   }),
+
+  /**
+   *  TEMPORARY: Delete this after the demo.
+   *  This is a temporary API for users to toggle role.
+   */
+  toggleRole: privateProcedure.mutation(async ({ ctx }) => {
+    const newRole = ctx.user.role === "USER" ? "AGENT" : "USER";
+
+    const { role } = await db.user.update({
+      where: { email: ctx.user.email },
+      data: { role: newRole },
+      select: { role: true },
+    });
+
+    return role;
+  }),
 });

@@ -29,7 +29,7 @@ export default async function Navbar() {
             <IconBadge icon={ShieldCheck} size="lg" />
           </Link>
         )}
-        <AuthButton user={user} />
+        <AuthButton initialData={user} />
       </div>
     </nav>
   );

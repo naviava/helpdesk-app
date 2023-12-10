@@ -9,10 +9,10 @@ import { cn } from "@/lib/utils";
 const font = Lexend_Deca({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  applicationName: "Helpdesk Management",
+  applicationName: "Ticket It",
   title: {
-    default: "Helpdesk",
-    template: `%s | Helpdesk`,
+    default: "Ticket It Helpdesk",
+    template: `%s | Ticket It`,
   },
   description: "ITSM at your fingertips.",
   icons: [
@@ -26,25 +26,26 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Helpdesk Management",
+    title: "Ticket It Helpdesk",
+    startupImage: "/logo.png",
   },
   formatDetection: {
     telephone: false,
   },
   openGraph: {
     type: "website",
-    siteName: "Helpdesk",
+    siteName: "Ticket It",
     title: {
-      default: "Helpdesk Management",
-      template: "Helpdesk Management",
+      default: "Ticket It Helpdesk",
+      template: `%s | Ticket It`,
     },
     description: "ITSM at your fingertips.",
   },
   twitter: {
     card: "summary",
     title: {
-      default: "Helpdesk Management",
-      template: "Helpdesk Management",
+      default: "Ticket It Helpdesk",
+      template: `%s | Ticket It`,
     },
     description: "ITSM at your fingertips.",
   },
