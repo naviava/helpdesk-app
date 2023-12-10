@@ -17,21 +17,13 @@ export default async function AllProviders({ children }: AllProvidersProps) {
 
   return (
     <SessionProvider session={session}>
-      <NextUIProvider>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          disableTransitionOnChange
-        >
-          <TRPCProvider>
-            <EdgeStoreProvider>
-              <ModalProvider />
-              {children}
-            </EdgeStoreProvider>
-            <Toaster position="top-center" />
-          </TRPCProvider>
-        </ThemeProvider>
-      </NextUIProvider>
+      <TRPCProvider>
+        <EdgeStoreProvider>
+          <ModalProvider />
+          {children}
+        </EdgeStoreProvider>
+        <Toaster position="top-center" />
+      </TRPCProvider>
     </SessionProvider>
   );
 }

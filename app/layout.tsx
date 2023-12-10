@@ -10,8 +10,17 @@ const font = Lexend_Deca({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   applicationName: "Helpdesk Management",
-  title: "Helpdesk",
+  title: {
+    default: "Helpdesk",
+    template: `%s | Helpdesk`,
+  },
   description: "ITSM at your fingertips.",
+  icons: [
+    {
+      url: "/logo.svg",
+      href: "/logo.svg",
+    },
+  ],
   manifest: "/manifest.json",
   themeColor: "#FFFFFF",
   appleWebApp: {
@@ -48,12 +57,7 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          "bg-slate-100 text-gray-950 dark:bg-slate-900 dark:text-gray-50",
-          font.className,
-        )}
-      >
+      <body className={cn("bg-slate-100 text-gray-950", font.className)}>
         <AllProviders>{children}</AllProviders>
       </body>
     </html>

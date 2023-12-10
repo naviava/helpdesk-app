@@ -16,9 +16,15 @@ export default async function Home() {
 
   if (!user) return <SignInClient />;
 
-  if (user.role === "ADMIN" || user.role === "AGENT") {
-    return redirect("/agent");
-  } else {
-    return redirect("/user");
-  }
+  /* 
+    TODO: Add admin and agent pages.
+    Enable this code when ready.
+  */
+  // if (user.role === "ADMIN" || user.role === "AGENT") {
+  //   return redirect("/agent");
+  // } else {
+  //   return redirect("/user");
+  // }
+
+  return redirect("/user");
 }

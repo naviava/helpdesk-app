@@ -41,10 +41,7 @@ function NavigationItem({ title, routes }: NavigationItemProps) {
             key={route.label}
             className="w-full hover:bg-gray-200"
           >
-            <Link
-              href={route.href}
-              className="flex items-center px-2 py-2 dark:hover:bg-slate-700"
-            >
+            <Link href={route.href} className="flex items-center px-2 py-2">
               <IconBadge
                 icon={route.icon}
                 size="lg"

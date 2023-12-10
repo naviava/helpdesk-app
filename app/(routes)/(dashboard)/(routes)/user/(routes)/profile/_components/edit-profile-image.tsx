@@ -41,7 +41,7 @@ export default function EditProfileImage({ user }: EditProfileImageProps) {
           className="h-24 w-24 rounded-lg md:h-28 md:w-28"
         >
           <AvatarImage src={user?.image || ""} alt="User profile image" />
-          <AvatarFallback className="bg-slate-300 text-5xl font-medium dark:bg-slate-700 md:text-6xl">
+          <AvatarFallback className="bg-slate-300 text-5xl font-medium md:text-6xl">
             {user?.name?.[0].toUpperCase()}
           </AvatarFallback>
         </Avatar>

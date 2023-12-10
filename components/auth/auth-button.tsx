@@ -53,7 +53,7 @@ export default function AuthButton({ user }: AuthButtonProps) {
         <div className="flex items-center gap-x-2">
           <Avatar className="h-6 w-6">
             <AvatarImage src={user?.image || ""} alt="User profile image" />
-            <AvatarFallback className="bg-slate-300 text-sm font-medium dark:bg-slate-700">
+            <AvatarFallback className="bg-slate-300 text-sm font-medium">
               {user?.name?.[0].toUpperCase()}
             </AvatarFallback>
           </Avatar>
@@ -61,12 +61,12 @@ export default function AuthButton({ user }: AuthButtonProps) {
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="dark:bg-slate-800">
+      <DropdownMenuContent align="end">
         <DropdownMenuLabel>
           <div className="flex gap-x-4 pt-2">
             <Avatar className="">
               <AvatarImage src={user?.image || ""} alt="User profile image" />
-              <AvatarFallback className="bg-slate-300 text-2xl font-medium dark:bg-slate-700">
+              <AvatarFallback className="bg-slate-300 text-2xl font-medium">
                 {user?.name?.[0].toUpperCase()}
               </AvatarFallback>
             </Avatar>
@@ -80,12 +80,12 @@ export default function AuthButton({ user }: AuthButtonProps) {
             </div>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator className="dark:bg-slate-700" />
+        <DropdownMenuSeparator />
         {accountOptions.map((option) => (
           <DropdownMenuItem
             key={option.label}
             onClick={option.action}
-            className="flex gap-2 dark:hover:bg-slate-700"
+            className="flex gap-2"
           >
             {option.label}
             <IconBadge icon={option.Icon} className="ml-auto" />

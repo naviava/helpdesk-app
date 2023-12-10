@@ -21,7 +21,7 @@ export default function SignInScreen() {
 
   return (
     <>
-      <p className="text-gray-600 dark:text-gray-400">
+      <p className="text-gray-600">
         {prompt.pretext}{" "}
         <span onClick={toggleModule} className="cursor-pointer underline">
           {prompt.link}

@@ -15,7 +15,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <Sidebar />
       </div> */}
       <main className="flex h-full flex-col pt-[4rem]">
-        <div className="flex-1 bg-slate-100 dark:bg-slate-900">{children}</div>
+        <div className="flex-1 bg-slate-100">{children}</div>
       </main>
     </div>
   );

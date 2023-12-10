@@ -17,7 +17,7 @@ interface TitleInputProps {
 
 export default function TitleInput({ form, disabled }: TitleInputProps) {
   return (
-    <div className="rounded-md bg-slate-200 px-4 py-2 dark:bg-slate-800">
+    <div className="rounded-md bg-slate-200 px-4 py-2">
       <FormField
         control={form.control}
         name="title"

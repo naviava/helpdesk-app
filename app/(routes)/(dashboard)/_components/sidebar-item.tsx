@@ -30,9 +30,8 @@ export default function SidebarItem({ icon, label, href }: SidebarItemProps) {
         type="button"
         onClick={handleClick}
         className={cn(
-          "flex h-14 w-full items-center justify-between text-left hover:cursor-pointer hover:bg-slate-300/50 dark:hover:bg-slate-700/50",
-          isActive &&
-            "bg-slate-300 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-700",
+          "flex h-14 w-full items-center justify-between text-left hover:cursor-pointer hover:bg-slate-300/50",
+          isActive && "bg-slate-300 hover:bg-slate-300",
         )}
       >
         <div className="flex items-center gap-x-3 px-4">
@@ -41,7 +40,7 @@ export default function SidebarItem({ icon, label, href }: SidebarItemProps) {
         </div>
         <div
           className={cn(
-            "ml-auto h-full border-2 border-sky-400 opacity-0 dark:border-sky-700",
+            "ml-auto h-full border-2 border-sky-400 opacity-0",
             isActive && "opacity-100",
           )}
         />

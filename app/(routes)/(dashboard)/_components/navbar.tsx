@@ -15,7 +15,7 @@ export default async function Navbar() {
   const isHelpdesk = user?.role === "ADMIN" || user?.role === "AGENT";
 
   return (
-    <nav className="relative flex h-full items-center justify-between border-b bg-slate-100 p-4 shadow-sm dark:bg-slate-900">
+    <nav className="relative flex h-full items-center justify-between border-b bg-slate-100 p-4 shadow-sm">
       <div className="hidden lg:block">
         <Logo />
       </div>

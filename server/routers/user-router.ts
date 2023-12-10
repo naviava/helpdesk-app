@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { hash } from "bcrypt";
-import { sanitize } from "dompurify";
 import { TRPCError } from "@trpc/server";
 import { getServerSession } from "next-auth";
 
@@ -79,7 +78,7 @@ export const userRouter = router({
       // Hash the password and create user, if email address is unique.
       const hashedPassword = await hash(password, 10);
       await db.user.create({
-        data: { name: sanitize(name), email: sanitize(email), hashedPassword },
+        data: { name, email, hashedPassword },
       });
 
       return true;
@@ -124,7 +123,7 @@ export const userRouter = router({
 
       await db.user.update({
         where: { email: ctx.user.email },
-        data: { image: sanitize(url) },
+        data: { image: url },
       });
 
       return true;
@@ -152,10 +151,10 @@ export const userRouter = router({
       const { name, departmentId, designation, dob, phoneNumber } = input;
 
       let dataQuery: any = {
-        name: sanitize(name),
+        name,
         designation,
-        phoneNumber: sanitize(phoneNumber),
-        dob: sanitize(dob),
+        phoneNumber,
+        dob,
       };
 
       if (!!departmentId) {
@@ -185,7 +184,7 @@ export const userRouter = router({
     .mutation(async ({ ctx, input }) => {
       await db.user.update({
         where: { email: ctx.user.email },
-        data: { bio: sanitize(input.bio) },
+        data: { bio: input.bio },
       });
     }),
 

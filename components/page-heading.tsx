@@ -7,9 +7,7 @@ export default function PageHeading({ title, tagline }: PageHeadingProps) {
   return (
     <div className="flex-1 space-y-1 text-center md:text-left">
       <h1 className="text-xl font-bold tracking-wide lg:text-2xl">{title}</h1>
-      {tagline && (
-        <p className="text-sm text-gray-400 dark:text-gray-500">{tagline}</p>
-      )}
+      {tagline && <p className="text-sm text-gray-400">{tagline}</p>}
     </div>
   );
 }

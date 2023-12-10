@@ -26,7 +26,7 @@ export default function PriorityRadioButtons({
   const priorityArray = useMemo(() => Object.values(Priority), []);
 
   return (
-    <div className="space-y-4 rounded-md bg-slate-200 px-4 py-2 dark:bg-slate-800 md:flex md:items-center md:justify-between md:space-x-4 md:space-y-0">
+    <div className="space-y-4 rounded-md bg-slate-200 px-4 py-2 md:flex md:items-center md:justify-between md:space-x-4 md:space-y-0">
       <h3 className="mr-20 whitespace-nowrap text-[14px]">Priority *</h3>
       <FormField
         control={form.control}

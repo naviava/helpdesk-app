@@ -6,12 +6,12 @@ import { useDropzone, type DropzoneOptions } from "react-dropzone";
 import { twMerge } from "tailwind-merge";
 
 const variants = {
-  base: "relative rounded-md flex justify-center items-center flex-col cursor-pointer min-h-[150px] min-w-[200px] border border-dashed border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out",
+  base: "relative rounded-md flex justify-center items-center flex-col cursor-pointer min-h-[150px] min-w-[200px] border border-dashed border-gray-400 transition-colors duration-200 ease-in-out",
   image:
-    "border-0 p-0 min-h-0 min-w-0 relative shadow-md bg-slate-200 dark:bg-slate-900 rounded-md",
+    "border-0 p-0 min-h-0 min-w-0 relative shadow-md bg-slate-200 rounded-md",
   active: "border-2",
   disabled:
-    "bg-gray-200 border-gray-300 cursor-default pointer-events-none bg-opacity-30 dark:bg-gray-700",
+    "bg-gray-200 border-gray-300 cursor-default pointer-events-none bg-opacity-30",
   accept: "border border-blue-500 bg-blue-500 bg-opacity-10",
   reject: "border border-red-700 bg-red-700 bg-opacity-10",
 };
@@ -160,12 +160,8 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                 void onChange?.(undefined);
               }}
             >
-              <div className="flex h-5 w-5 items-center justify-center rounded-md border border-solid border-gray-500 bg-white transition-all duration-300 hover:h-6 hover:w-6 dark:border-gray-400 dark:bg-black">
-                <X
-                  className="text-gray-500 dark:text-gray-400"
-                  width={16}
-                  height={16}
-                />
+              <div className="flex h-5 w-5 items-center justify-center rounded-md border border-solid border-gray-500 bg-white transition-all duration-300 hover:h-6 hover:w-6">
+                <X className="text-gray-500" width={16} height={16} />
               </div>
             </div>
           )}
@@ -189,7 +185,7 @@ const Button = React.forwardRef<
         // base
         "inline-flex cursor-pointer items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
         // color
-        "border border-gray-400 text-gray-400 shadow hover:bg-gray-100 hover:text-gray-500 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700",
+        "border border-gray-400 text-gray-400 shadow hover:bg-gray-100 hover:text-gray-500",
         // size
         "h-6 rounded-md px-2 text-xs",
         className,
