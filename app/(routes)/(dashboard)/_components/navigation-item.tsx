@@ -45,7 +45,7 @@ function NavigationItem({ title, routes }: NavigationItemProps) {
           </div>
         </div>
       </PopoverTrigger>
-      <PopoverContent className="p-0">
+      <PopoverContent align="start" alignOffset={-20} className="w-[15rem] p-0">
         {routes.map((route) => (
           <div
             key={route.label}
