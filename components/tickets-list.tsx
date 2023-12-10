@@ -1,5 +1,3 @@
-import { format } from "date-fns";
-
 import { columns } from "@/components/tickets-table/columns";
 import { DataTable } from "@/components/tickets-table/data-table";
 

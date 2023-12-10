@@ -10,15 +10,17 @@ export function calculateOpenedDuration(date: Date) {
 
   openedDuration = differenceInCalendarDays(Date.now(), date);
   if (openedDuration > 0)
-    return openedDuration === 1 ? "1 day" : `${openedDuration} days`;
+    return openedDuration === 1 ? "1 day ago" : `${openedDuration} days ago`;
 
   openedDuration = differenceInHours(Date.now(), date);
   if (openedDuration > 0)
-    return openedDuration === 1 ? "1 hour" : `${openedDuration} hours`;
+    return openedDuration === 1 ? "1 hour ago" : `${openedDuration} hours ago`;
 
   openedDuration = differenceInMinutes(Date.now(), date);
   if (openedDuration > 0)
-    return openedDuration === 1 ? "1 minute" : `${openedDuration} minutes`;
+    return openedDuration === 1
+      ? "1 minute ago"
+      : `${openedDuration} minutes ago`;
 
   return "now";
 }

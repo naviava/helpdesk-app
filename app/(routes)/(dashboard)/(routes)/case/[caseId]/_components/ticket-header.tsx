@@ -13,7 +13,7 @@ export default function TicketHeader({ ticket }: TicketHeaderProps) {
         <h2 className="text-xl font-medium tracking-wide">{ticket.title}</h2>
         <p className="text-sm text-muted-foreground">{`Opened ${calculateOpenedDuration(
           ticket.createdAt,
-        )} ago`}</p>
+        )}`}</p>
       </div>
       <StatusBadge status={ticket.status} />
     </section>

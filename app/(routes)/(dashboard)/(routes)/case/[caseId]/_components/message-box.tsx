@@ -42,9 +42,7 @@ export default function MessageBox({ message }: MessageBoxProps) {
                 </div>
                 {/* Opened duration. */}
                 <span className="ml-2 shrink-0 text-xs italic text-muted-foreground">
-                  {createdDuration === "now"
-                    ? createdDuration
-                    : `${createdDuration} ago`}
+                  {createdDuration}
                 </span>
               </div>
               {/* Date. */}
